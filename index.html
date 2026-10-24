@@ -28,8 +28,13 @@ table{width:100%;border-collapse:collapse}th,td{padding:6px 8px;border-bottom:1p
 .note{color:var(--mut);font-size:12px}.brand{display:flex;gap:10px;align-items:center}#sb{font-size:11px;padding:3px 9px;border-radius:99px;color:#fff;white-space:nowrap}#login,#vf{position:fixed;inset:0;background:var(--bg);z-index:50;display:none;align-items:center;justify-content:center}#login .card,#vf .card{width:340px;max-width:94vw;margin:0}#md{position:fixed;inset:0;background:rgba(16,24,40,.45);z-index:60;display:none;align-items:center;justify-content:center;padding:10px}#md .card{max-width:640px;width:100%;max-height:92vh;overflow:auto;margin:0}.card{box-shadow:0 1px 3px rgba(16,24,40,.08)}#cr{max-width:1150px;margin:8px auto 0;padding:0 14px;font-size:13px}#cr a{color:var(--pr);text-decoration:none}.g3{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}.tile{background:var(--pr2);border:1px solid var(--bd);border-radius:12px;padding:20px 12px;text-align:center;cursor:pointer;display:flex;flex-direction:column;gap:4px}.tile span{font-size:38px}.tile:hover{border-color:var(--pr)}.tile small{color:var(--mut)}h4{margin:14px 0 8px;color:var(--mut)}footer{text-align:center;color:var(--mut);font-size:12px;padding:6px 10px 10px}
 @media print{header,nav,.np,.card:not(#rp):not(#aP){display:none!important}#aP{border:0}main{padding:0}#rp{border:0;padding:0}#out{border:0}}
 .rq{color:#d00;font-weight:700}
+.mcb{position:relative}.mcb .mcs{padding-right:30px}.mcb .mct{position:absolute;right:1px;top:1px;bottom:1px;width:28px;border:0;background:none;color:var(--mut);cursor:pointer;font-size:11px}
+.mcb.bad .mcs{border-color:var(--er);background:#fff5f4}.mcb .mcs:focus{outline:2px solid var(--pr);outline-offset:-1px}
+.mcl{display:none;position:absolute;left:0;right:0;top:100%;z-index:60;background:#fff;border:1px solid var(--pr);border-radius:6px;max-height:320px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,.18);min-width:260px}.mcl.on{display:block}
+.mcl .mg{position:sticky;top:0;background:var(--pr2);color:var(--pr);font-size:11px;font-weight:700;padding:3px 8px}.mcl .mi{padding:6px 8px;cursor:pointer;border-bottom:1px solid #eef2f0;display:flex;gap:8px;justify-content:space-between;align-items:center}
+.mcl .mi.a,.mcl .mi:hover{background:var(--pr2)}.mcl .mi small{display:block;color:var(--mut);font-size:11px}.mcl mark{background:#fde68a;color:inherit;padding:0}.mcl .mn{padding:10px;color:var(--mut)}
 </style></head><body>
-<header><div class="brand" onclick="goHome()" style="cursor:pointer"><img class="lg" width="72" height="72" style="background:none;border:0" alt="Muslim Hands"><div><h1>Muslim Hands Pakistan – Healthcare Management System</h1><small>BHU · RCPD · Mobile Health Units · v8</small></div></div>
+<header><div class="brand" onclick="goHome()" style="cursor:pointer"><img class="lg" width="72" height="72" style="background:none;border:0" alt="Muslim Hands"><div><h1>Muslim Hands Pakistan – Healthcare Management System</h1><small>BHU · RCPD · Mobile Health Units · v9</small></div></div>
 <div class="op"><span id="sb"></span></div></header>
 <div id="login"><div class="card"><img class="lg" width="64" height="64" style="background:none;border:0" alt=""><h3 id="lH">Sign in</h3><label>Email</label><input id="lE" type="email" autocomplete="username"><label style="margin-top:8px">Password</label><input id="lP" type="password" autocomplete="current-password"><p id="lM" class="note" style="color:var(--er)"></p><button class="b" onclick="login()">Sign in</button> <button class="b s" onclick="$('login').style.display='none';pend=null">Cancel</button><p class="note">Accounts are issued by the Health &amp; Nutrition Department.</p></div></div>
 <div id="vf" style="display:none"><div class="card"></div></div><div id="md" style="display:none"><div class="card"></div></div><div id="cr"></div><nav id="nav" style="display:none"></nav><main id="app"></main><footer class="np">Developed by <b>Syed Waqas Ali Bokhari</b> – Health &amp; Nutrition Officer, Muslim Hands Pakistan<br>Global Health Delivery, Harvard T.H. Chan School of Public Health</footer>
@@ -42,152 +47,240 @@ const AG=[['u18m','Under 18 Years (Male)'],['u18f','Under 18 Years (Female)'],['
 const TY={BHU:'Basic Health Unit',RCPD:'Rehab Centre (RCPD)',MHU:'Mobile Health Unit'};
 // ===== EDIT: disease / ailment list (add or remove names inside quotes) =====
 const DIS=['Acute respiratory infection','Pneumonia','Diarrhoea / gastroenteritis','Hypertension','Diabetes mellitus','Skin infection / scabies','Urinary tract infection','Typhoid / enteric fever','Malaria','Gastritis / dyspepsia','Anaemia','Musculoskeletal pain','Asthma / COPD','Eye infection','Dental problems','Worm infestation','Fever (unspecified)','Injury / wound','Antenatal / maternal care','Malnutrition','Tonsillitis / pharyngitis','Otitis media / ear infection','Allergic rhinitis / urticaria','Tuberculosis (suspected / on treatment)','Hepatitis B / C / jaundice','Dengue fever','Constipation / functional bowel disorder','Ischaemic heart disease / chest pain','Thyroid disorder','Obesity','Vitamin D / calcium deficiency','Renal stone / colic','Fungal skin infection (tinea)','Eczema / dermatitis','Refractive error / visual problem','Cataract (suspected)','Arthritis / joint pain','Low back pain','Headache / migraine','Epilepsy / seizures','Depression / anxiety / stress','Postnatal care','Family planning','Menstrual disorder','Vaginal discharge / reproductive tract infection','Burns','Dog bite / snake bite','Heat stroke / dehydration','Childhood illness (other)','Other'];
-// ===== EDIT: medicines list. One per line: Category|Medicine name|unit|reorder level =====
-const MEDS=`Analgesic / antipyretic|Paracetamol 500 mg tablet|tab|1000
-Analgesic / antipyretic|Paracetamol syrup 120 mg/5 ml (60 ml)|bottle|100
-Analgesic / antipyretic|Ibuprofen 400 mg tablet|tab|500
-Analgesic / antipyretic|Ibuprofen suspension 100 mg/5 ml|bottle|50
-Analgesic / antipyretic|Diclofenac sodium 50 mg tablet|tab|300
-Analgesic / antipyretic|Diclofenac injection 75 mg/3 ml|amp|30
-Antibiotic|Amoxicillin 500 mg capsule|cap|500
-Antibiotic|Amoxicillin suspension 250 mg/5 ml|bottle|60
-Antibiotic|Amoxicillin + clavulanic acid 625 mg tablet|tab|200
-Antibiotic|Azithromycin 500 mg tablet|tab|150
-Antibiotic|Azithromycin suspension 200 mg/5 ml|bottle|40
-Antibiotic|Ciprofloxacin 500 mg tablet|tab|200
-Antibiotic|Co-trimoxazole 480 mg tablet|tab|200
-Antibiotic|Co-trimoxazole suspension 240 mg/5 ml|bottle|40
-Antibiotic|Doxycycline 100 mg capsule|cap|150
-Antibiotic|Metronidazole 400 mg tablet|tab|300
-Antibiotic|Metronidazole suspension 200 mg/5 ml|bottle|40
-Antibiotic|Cefixime 400 mg capsule|cap|100
-Antibiotic|Cephalexin 500 mg capsule|cap|150
-Antibiotic|Nitrofurantoin 100 mg capsule|cap|100
-Antibiotic|Ceftriaxone 1 g injection|vial|40
-Antiparasitic / antimalarial|Albendazole 400 mg tablet|tab|200
-Antiparasitic / antimalarial|Mebendazole 100 mg tablet|tab|200
-Antiparasitic / antimalarial|Ivermectin 6 mg tablet|tab|100
-Antiparasitic / antimalarial|Permethrin 5% cream/lotion|tube|40
-Antiparasitic / antimalarial|Artemether + lumefantrine 20/120 mg tablet|tab|100
-Gastrointestinal|Oral rehydration salts (ORS) sachet|sachet|500
-Gastrointestinal|Zinc sulphate 20 mg dispersible tablet|tab|300
-Gastrointestinal|Omeprazole 20 mg capsule|cap|300
-Gastrointestinal|Antacid (aluminium + magnesium hydroxide) suspension|bottle|50
-Gastrointestinal|Ondansetron 4 mg tablet|tab|100
-Gastrointestinal|Hyoscine butylbromide 10 mg tablet|tab|150
-Respiratory / allergy|Salbutamol inhaler 100 mcg/dose|pcs|30
-Respiratory / allergy|Salbutamol 4 mg tablet|tab|150
-Respiratory / allergy|Salbutamol syrup 2 mg/5 ml|bottle|40
-Respiratory / allergy|Cetirizine 10 mg tablet|tab|300
-Respiratory / allergy|Chlorphenamine 4 mg tablet|tab|200
-Respiratory / allergy|Prednisolone 5 mg tablet|tab|200
-Cardiovascular / endocrine|Amlodipine 5 mg tablet|tab|300
-Cardiovascular / endocrine|Enalapril 5 mg tablet|tab|200
-Cardiovascular / endocrine|Losartan 50 mg tablet|tab|200
-Cardiovascular / endocrine|Atenolol 50 mg tablet|tab|200
-Cardiovascular / endocrine|Hydrochlorothiazide 25 mg tablet|tab|150
-Cardiovascular / endocrine|Aspirin 75 mg tablet|tab|300
-Cardiovascular / endocrine|Atorvastatin 20 mg tablet|tab|200
-Cardiovascular / endocrine|Metformin 500 mg tablet|tab|500
-Cardiovascular / endocrine|Glibenclamide 5 mg tablet|tab|200
-Nutrition / maternal|Ferrous sulphate + folic acid 60 mg/400 mcg tablet|tab|500
-Nutrition / maternal|Folic acid 5 mg tablet|tab|200
-Nutrition / maternal|Calcium carbonate 500 mg tablet|tab|300
-Nutrition / maternal|Vitamin A 200,000 IU capsule|cap|100
-Nutrition / maternal|Multivitamin syrup|bottle|50
-Nutrition / maternal|Vitamin B-complex tablet|tab|300
-Nutrition / maternal|RUTF sachet (92 g)|sachet|200
-Dermatological|Clotrimazole 1% cream|tube|50
-Dermatological|Hydrocortisone 1% cream|tube|40
-Dermatological|Calamine lotion|bottle|30
-Dermatological|Fusidic acid 2% cream|tube|30
-Dermatological|Povidone iodine 10% solution|bottle|30
-Eye / ENT|Chloramphenicol 0.5% eye drops|vial|40
-Eye / ENT|Ciprofloxacin 0.3% eye/ear drops|vial|30
-Emergency / injectables|Sodium chloride 0.9% infusion 500 ml|bag|50
-Emergency / injectables|Ringer lactate infusion 500 ml|bag|50
-Emergency / injectables|Lidocaine 2% injection|vial|20
-Emergency / injectables|Tetanus toxoid injection|vial|30
-Emergency / injectables|Adrenaline 1 mg/ml ampoule|amp|10
-Emergency / injectables|Hydrocortisone 100 mg injection|vial|15
-Analgesic / antipyretic|Mefenamic acid 500 mg tablet|tab|200
-Analgesic / antipyretic|Naproxen 500 mg tablet|tab|150
-Analgesic / antipyretic|Orphenadrine 50 mg tablet|tab|100
-Antibiotic|Flucloxacillin 500 mg capsule|cap|150
-Antibiotic|Erythromycin 250 mg tablet|tab|100
-Antibiotic|Clarithromycin 500 mg tablet|tab|100
-Antibiotic|Levofloxacin 500 mg tablet|tab|100
-Antibiotic|Cefuroxime 500 mg tablet|tab|100
-Antibiotic|Clindamycin 300 mg capsule|cap|60
-Antibiotic|Tinidazole 500 mg tablet|tab|100
-Antibiotic|Gentamicin 80 mg injection|amp|30
-Antibiotic|Benzathine penicillin 1.2 MU injection|vial|20
-Antiparasitic / antimalarial|Chloroquine 150 mg tablet|tab|100
-Antiparasitic / antimalarial|Primaquine 7.5 mg tablet|tab|100
-Antiparasitic / antimalarial|Benzyl benzoate 25% lotion|bottle|30
-Antifungal / antiviral|Fluconazole 150 mg capsule|cap|60
-Antifungal / antiviral|Nystatin oral drops 100,000 IU/ml|bottle|30
-Antifungal / antiviral|Terbinafine 1% cream|tube|30
-Antifungal / antiviral|Acyclovir 400 mg tablet|tab|60
-Gastrointestinal|Famotidine 20 mg tablet|tab|200
-Gastrointestinal|Domperidone 10 mg tablet|tab|200
-Gastrointestinal|Loperamide 2 mg capsule|cap|100
-Gastrointestinal|Lactulose syrup|bottle|30
-Gastrointestinal|Bisacodyl 5 mg tablet|tab|100
-Gastrointestinal|Mebeverine 135 mg tablet|tab|100
-Respiratory / allergy|Montelukast 10 mg tablet|tab|100
-Respiratory / allergy|Montelukast 5 mg chewable tablet|tab|100
-Respiratory / allergy|Loratadine 10 mg tablet|tab|150
-Respiratory / allergy|Cetirizine syrup 5 mg/5 ml|bottle|50
-Respiratory / allergy|Ambroxol syrup 15 mg/5 ml|bottle|40
-Respiratory / allergy|Bromhexine syrup 4 mg/5 ml|bottle|40
-Respiratory / allergy|Beclometasone inhaler 100 mcg/dose|pcs|20
-Respiratory / allergy|Salbutamol nebuliser solution 5 mg/ml|vial|30
-Cardiovascular / endocrine|Methyldopa 250 mg tablet|tab|150
-Cardiovascular / endocrine|Captopril 25 mg tablet|tab|100
-Cardiovascular / endocrine|Furosemide 40 mg tablet|tab|100
-Cardiovascular / endocrine|Spironolactone 25 mg tablet|tab|60
-Cardiovascular / endocrine|Clopidogrel 75 mg tablet|tab|100
-Cardiovascular / endocrine|Isosorbide dinitrate 5 mg sublingual tablet|tab|50
-Cardiovascular / endocrine|Gliclazide 80 mg tablet|tab|150
-Cardiovascular / endocrine|Levothyroxine 50 mcg tablet|tab|60
-Nutrition / maternal|Ferrous sulphate syrup|bottle|50
-Nutrition / maternal|Calcium + vitamin D3 tablet|tab|200
-Nutrition / maternal|Cholecalciferol (vitamin D3) 50,000 IU capsule|cap|100
-Nutrition / maternal|Vitamin C 500 mg tablet|tab|200
-Nutrition / maternal|Multivitamin tablet|tab|200
-Nutrition / maternal|Methylcobalamin (vitamin B12) 500 mcg tablet|tab|100
-Nutrition / maternal|Oral contraceptive pill (levonorgestrel + ethinylestradiol)|cycle|100
-Nutrition / maternal|Medroxyprogesterone 150 mg injection|vial|50
-Nutrition / maternal|Clotrimazole 100 mg vaginal pessary|pessary|100
-Dermatological|Betamethasone 0.1% cream|tube|40
-Dermatological|Silver sulfadiazine 1% cream|tube|30
-Dermatological|Mupirocin 2% ointment|tube|30
-Dermatological|Gentian violet 0.5% paint|bottle|20
-Eye / ENT|Tetracycline 1% eye ointment|tube|30
-Eye / ENT|Artificial tears (carboxymethylcellulose 0.5%)|vial|40
-Eye / ENT|Xylometazoline 0.05% nasal drops|bottle|40
-Eye / ENT|Sodium chloride 0.9% nasal drops|bottle|40
-Neurology / mental health|Carbamazepine 200 mg tablet|tab|60
-Neurology / mental health|Phenobarbital 30 mg tablet|tab|60
-Neurology / mental health|Amitriptyline 10 mg tablet|tab|100
-Dental / oral|Chlorhexidine 0.2% mouthwash|bottle|30
-Emergency / injectables|Dexamethasone 4 mg/ml injection|amp|30
-Emergency / injectables|Diazepam 10 mg injection|amp|15
-Emergency / injectables|Atropine 1 mg/ml injection|amp|10
-Emergency / injectables|Promethazine 25 mg injection|amp|20
-Emergency / injectables|Ondansetron 4 mg injection|amp|30
-Emergency / injectables|Omeprazole 40 mg injection|vial|20
-Emergency / injectables|Furosemide 20 mg injection|amp|20
-Emergency / injectables|Oxytocin 10 IU injection|amp|20
-Emergency / injectables|Dextrose 5% infusion 500 ml|bag|50
-Emergency / injectables|Water for injection 10 ml|amp|100`.split('\n').map(l=>l.split('|'));const LOGO='data:image/png;base64,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';
+// ===== EDIT: MASTER medicines list (merged: portal list + Annex-1 ISD Oct). One per line:
+// Code|Id|Category|Medicine name|Generic|Brand|Manufacturer|Unit|Pack size|Reorder level|Remarks
+// This is only the built-in starting list. Day-to-day changes are made by uploading the master Excel in Settings. =====
+const MASTER=`MH-0001|m001|Analgesic / antipyretic|Paracetamol 500 mg tablet||Panadol, Calpol|GSK|tab|200|1000|
+MH-0002|m002|Analgesic / antipyretic|Paracetamol syrup 120 mg/5 ml (60 ml)||Febrol|Barrett|bottle|1|100|
+MH-0003|m003|Analgesic / antipyretic|Ibuprofen 400 mg tablet||||tab|0|500|
+MH-0004|m004|Analgesic / antipyretic|Ibuprofen suspension 100 mg/5 ml|||Aries|bottle|1|50|
+MH-0005|m005|Analgesic / antipyretic|Diclofenac sodium 50 mg tablet||||tab|0|300|
+MH-0006|m006|Analgesic / antipyretic|Diclofenac injection 75 mg/3 ml||||amp|0|30|
+MH-0007|m007|Antibiotic|Amoxicillin 500 mg capsule||Amoxil|GSK|cap|100|500|
+MH-0008|m008|Antibiotic|Amoxicillin suspension 250 mg/5 ml|||Dr. Raza|bottle|1|60|
+MH-0009|m009|Antibiotic|Amoxicillin + clavulanic acid 625 mg tablet||Co-amoxiclav|Bosch|tab|6|200|
+MH-0010|m010|Antibiotic|Azithromycin 500 mg tablet||||tab|0|150|
+MH-0011|m011|Antibiotic|Azithromycin suspension 200 mg/5 ml||||bottle|0|40|
+MH-0012|m012|Antibiotic|Ciprofloxacin 500 mg tablet||Cyrocin|Highnoon|tab|10|200|
+MH-0013|m013|Antibiotic|Co-trimoxazole 480 mg tablet||||tab|0|200|
+MH-0014|m014|Antibiotic|Co-trimoxazole suspension 240 mg/5 ml||||bottle|0|40|
+MH-0015|m015|Antibiotic|Doxycycline 100 mg capsule|||Atco|cap|50|150|
+MH-0016|m016|Antibiotic|Metronidazole 400 mg tablet||Flagyl|Sanofi|tab|200|300|
+MH-0017|m017|Antibiotic|Metronidazole suspension 200 mg/5 ml||||bottle|0|40|
+MH-0018|m018|Antibiotic|Cefixime 400 mg capsule|||Mcolson|cap|5|100|
+MH-0019|m019|Antibiotic|Cephalexin 500 mg capsule||||cap|0|150|
+MH-0020|m020|Antibiotic|Nitrofurantoin 100 mg capsule||||cap|0|100|
+MH-0021|m021|Antibiotic|Ceftriaxone 1 g injection||||vial|0|40|
+MH-0022|m022|Antiparasitic / antimalarial|Albendazole 400 mg tablet||||tab|0|200|
+MH-0023|m023|Antiparasitic / antimalarial|Mebendazole 100 mg tablet||||tab|0|200|
+MH-0024|m024|Antiparasitic / antimalarial|Ivermectin 6 mg tablet||||tab|0|100|
+MH-0025|m025|Antiparasitic / antimalarial|Permethrin 5% cream/lotion||||tube|0|40|
+MH-0026|m026|Antiparasitic / antimalarial|Artemether + lumefantrine 20/120 mg tablet||||tab|0|100|
+MH-0027|m027|Gastrointestinal|Oral rehydration salts (ORS) sachet||Peditral|Searle|sachet|1|500|
+MH-0028|m028|Gastrointestinal|Zinc sulphate 20 mg dispersible tablet||||tab|0|300|
+MH-0029|m029|Gastrointestinal|Omeprazole 20 mg capsule|||Danas|cap|100|300|
+MH-0030|m030|Gastrointestinal|Antacid (aluminium + magnesium hydroxide) suspension||||bottle|0|50|
+MH-0031|m031|Gastrointestinal|Ondansetron 4 mg tablet||||tab|0|100|
+MH-0032|m032|Gastrointestinal|Hyoscine butylbromide 10 mg tablet||||tab|0|150|
+MH-0033|m033|Respiratory / allergy|Salbutamol inhaler 100 mcg/dose||||pcs|0|30|
+MH-0034|m034|Respiratory / allergy|Salbutamol 4 mg tablet||||tab|0|150|
+MH-0035|m035|Respiratory / allergy|Salbutamol syrup 2 mg/5 ml||||bottle|0|40|
+MH-0036|m036|Respiratory / allergy|Cetirizine 10 mg tablet||Rigix|AGP|tab|30|300|
+MH-0037|m037|Respiratory / allergy|Chlorphenamine 4 mg tablet||||tab|0|200|
+MH-0038|m038|Respiratory / allergy|Prednisolone 5 mg tablet||||tab|0|200|
+MH-0039|m039|Cardiovascular / endocrine|Amlodipine 5 mg tablet||||tab|0|300|
+MH-0040|m040|Cardiovascular / endocrine|Enalapril 5 mg tablet||||tab|0|200|
+MH-0041|m041|Cardiovascular / endocrine|Losartan 50 mg tablet||||tab|0|200|
+MH-0042|m042|Cardiovascular / endocrine|Atenolol 50 mg tablet||||tab|0|200|
+MH-0043|m043|Cardiovascular / endocrine|Hydrochlorothiazide 25 mg tablet||||tab|0|150|
+MH-0044|m044|Cardiovascular / endocrine|Aspirin 75 mg tablet||Loprin|Highnoon|tab|30|300|
+MH-0045|m045|Cardiovascular / endocrine|Atorvastatin 20 mg tablet||||tab|0|200|
+MH-0046|m046|Cardiovascular / endocrine|Metformin 500 mg tablet||||tab|0|500|
+MH-0047|m047|Cardiovascular / endocrine|Glibenclamide 5 mg tablet||||tab|0|200|
+MH-0048|m048|Nutrition / maternal|Ferrous sulphate + folic acid 60 mg/400 mcg tablet||||tab|0|500|
+MH-0049|m049|Nutrition / maternal|Folic acid 5 mg tablet|||Albro|tab|100|200|Annex gives no strength - matched to 5 mg
+MH-0050|m050|Nutrition / maternal|Calcium carbonate 500 mg tablet||||tab|0|300|
+MH-0051|m051|Nutrition / maternal|Vitamin A 200,000 IU capsule||||cap|0|100|
+MH-0052|m052|Nutrition / maternal|Multivitamin syrup||||bottle|0|50|
+MH-0053|m053|Nutrition / maternal|Vitamin B-complex tablet||||tab|0|300|
+MH-0054|m054|Nutrition / maternal|RUTF sachet (92 g)||||sachet|0|200|
+MH-0055|m055|Dermatological|Clotrimazole 1% cream||Canestin|Bayer|tube|1|50|
+MH-0056|m056|Dermatological|Hydrocortisone 1% cream||||tube|0|40|
+MH-0057|m057|Dermatological|Calamine lotion||||bottle|0|30|
+MH-0058|m058|Dermatological|Fusidic acid 2% cream||Fusiderm|Davis|tube|1|30|
+MH-0059|m059|Dermatological|Povidone iodine 10% solution||||bottle|0|30|
+MH-0060|m060|Eye / ENT|Chloramphenicol 0.5% eye drops||||vial|0|40|
+MH-0061|m061|Eye / ENT|Ciprofloxacin 0.3% eye/ear drops||||vial|0|30|
+MH-0062|m062|Emergency / injectables|Sodium chloride 0.9% infusion 500 ml||||bag|0|50|
+MH-0063|m063|Emergency / injectables|Ringer lactate infusion 500 ml||||bag|0|50|
+MH-0064|m064|Emergency / injectables|Lidocaine 2% injection||||vial|0|20|
+MH-0065|m065|Emergency / injectables|Tetanus toxoid injection||||vial|0|30|
+MH-0066|m066|Emergency / injectables|Adrenaline 1 mg/ml ampoule||||amp|0|10|
+MH-0067|m067|Emergency / injectables|Hydrocortisone 100 mg injection||||vial|0|15|
+MH-0068|m068|Analgesic / antipyretic|Mefenamic acid 500 mg tablet||Ponston Forte|LCI|tab|200|200|
+MH-0069|m069|Analgesic / antipyretic|Naproxen 500 mg tablet||||tab|0|150|
+MH-0070|m070|Analgesic / antipyretic|Orphenadrine 50 mg tablet||||tab|0|100|
+MH-0071|m071|Antibiotic|Flucloxacillin 500 mg capsule||||cap|0|150|
+MH-0072|m072|Antibiotic|Erythromycin 250 mg tablet||||tab|0|100|
+MH-0073|m073|Antibiotic|Clarithromycin 500 mg tablet||||tab|0|100|
+MH-0074|m074|Antibiotic|Levofloxacin 500 mg tablet|||Highnoon|tab|10|100|
+MH-0075|m075|Antibiotic|Cefuroxime 500 mg tablet||||tab|0|100|
+MH-0076|m076|Antibiotic|Clindamycin 300 mg capsule||||cap|0|60|
+MH-0077|m077|Antibiotic|Tinidazole 500 mg tablet||||tab|0|100|
+MH-0078|m078|Antibiotic|Gentamicin 80 mg injection||||amp|0|30|
+MH-0079|m079|Antibiotic|Benzathine penicillin 1.2 MU injection||||vial|0|20|
+MH-0080|m080|Antiparasitic / antimalarial|Chloroquine 150 mg tablet||||tab|0|100|
+MH-0081|m081|Antiparasitic / antimalarial|Primaquine 7.5 mg tablet||||tab|0|100|
+MH-0082|m082|Antiparasitic / antimalarial|Benzyl benzoate 25% lotion||||bottle|0|30|
+MH-0083|m083|Antifungal / antiviral|Fluconazole 150 mg capsule||||cap|0|60|
+MH-0084|m084|Antifungal / antiviral|Nystatin oral drops 100,000 IU/ml||||bottle|0|30|
+MH-0085|m085|Antifungal / antiviral|Terbinafine 1% cream||||tube|0|30|
+MH-0086|m086|Antifungal / antiviral|Acyclovir 400 mg tablet||||tab|0|60|
+MH-0087|m087|Gastrointestinal|Famotidine 20 mg tablet|||Siza|tab|20|200|Annex gives no strength - matched to 20 mg
+MH-0088|m088|Gastrointestinal|Domperidone 10 mg tablet||||tab|0|200|
+MH-0089|m089|Gastrointestinal|Loperamide 2 mg capsule||Imodium|Aspin|cap|60|100|
+MH-0090|m090|Gastrointestinal|Lactulose syrup||||bottle|0|30|
+MH-0091|m091|Gastrointestinal|Bisacodyl 5 mg tablet||||tab|0|100|
+MH-0092|m092|Gastrointestinal|Mebeverine 135 mg tablet||||tab|0|100|
+MH-0093|m093|Respiratory / allergy|Montelukast 10 mg tablet|||Ferozsons|tab|14|100|
+MH-0094|m094|Respiratory / allergy|Montelukast 5 mg chewable tablet||||tab|0|100|
+MH-0095|m095|Respiratory / allergy|Loratadine 10 mg tablet||Softin|Wilsons|tab|30|150|
+MH-0096|m096|Respiratory / allergy|Cetirizine syrup 5 mg/5 ml||Zyrtec|GSK|bottle|1|50|
+MH-0097|m097|Respiratory / allergy|Ambroxol syrup 15 mg/5 ml||||bottle|0|40|
+MH-0098|m098|Respiratory / allergy|Bromhexine syrup 4 mg/5 ml||||bottle|0|40|
+MH-0099|m099|Respiratory / allergy|Beclometasone inhaler 100 mcg/dose||||pcs|0|20|
+MH-0100|m100|Respiratory / allergy|Salbutamol nebuliser solution 5 mg/ml||||vial|0|30|
+MH-0101|m101|Cardiovascular / endocrine|Methyldopa 250 mg tablet||||tab|0|150|
+MH-0102|m102|Cardiovascular / endocrine|Captopril 25 mg tablet||||tab|0|100|
+MH-0103|m103|Cardiovascular / endocrine|Furosemide 40 mg tablet||Lasix|Sanofi|tab|100|100|
+MH-0104|m104|Cardiovascular / endocrine|Spironolactone 25 mg tablet||||tab|0|60|
+MH-0105|m105|Cardiovascular / endocrine|Clopidogrel 75 mg tablet||||tab|0|100|
+MH-0106|m106|Cardiovascular / endocrine|Isosorbide dinitrate 5 mg sublingual tablet||||tab|0|50|
+MH-0107|m107|Cardiovascular / endocrine|Gliclazide 80 mg tablet||||tab|0|150|
+MH-0108|m108|Cardiovascular / endocrine|Levothyroxine 50 mcg tablet||||tab|0|60|
+MH-0109|m109|Nutrition / maternal|Ferrous sulphate syrup||||bottle|0|50|
+MH-0110|m110|Nutrition / maternal|Calcium + vitamin D3 tablet||||tab|0|200|
+MH-0111|m111|Nutrition / maternal|Cholecalciferol (vitamin D3) 50,000 IU capsule||||cap|0|100|
+MH-0112|m112|Nutrition / maternal|Vitamin C 500 mg tablet||||tab|0|200|
+MH-0113|m113|Nutrition / maternal|Multivitamin tablet||Multibionta M|Merck|tab|30|200|
+MH-0114|m114|Nutrition / maternal|Methylcobalamin (vitamin B12) 500 mcg tablet||||tab|0|100|
+MH-0115|m115|Nutrition / maternal|Oral contraceptive pill (levonorgestrel + ethinylestradiol)||||cycle|0|100|
+MH-0116|m116|Nutrition / maternal|Medroxyprogesterone 150 mg injection||||vial|0|50|
+MH-0117|m117|Nutrition / maternal|Clotrimazole 100 mg vaginal pessary||||pessary|0|100|
+MH-0118|m118|Dermatological|Betamethasone 0.1% cream||Betnovate|Atco|tube|1|40|
+MH-0119|m119|Dermatological|Silver sulfadiazine 1% cream||||tube|0|30|
+MH-0120|m120|Dermatological|Mupirocin 2% ointment||||tube|0|30|
+MH-0121|m121|Dermatological|Gentian violet 0.5% paint||||bottle|0|20|
+MH-0122|m122|Eye / ENT|Tetracycline 1% eye ointment||||tube|0|30|
+MH-0123|m123|Eye / ENT|Artificial tears (carboxymethylcellulose 0.5%)||||vial|0|40|
+MH-0124|m124|Eye / ENT|Xylometazoline 0.05% nasal drops||||bottle|0|40|
+MH-0125|m125|Eye / ENT|Sodium chloride 0.9% nasal drops||||bottle|0|40|
+MH-0126|m126|Neurology / mental health|Carbamazepine 200 mg tablet||||tab|0|60|
+MH-0127|m127|Neurology / mental health|Phenobarbital 30 mg tablet||||tab|0|60|
+MH-0128|m128|Neurology / mental health|Amitriptyline 10 mg tablet||||tab|0|100|
+MH-0129|m129|Dental / oral|Chlorhexidine 0.2% mouthwash||||bottle|0|30|
+MH-0130|m130|Emergency / injectables|Dexamethasone 4 mg/ml injection||||amp|0|30|
+MH-0131|m131|Emergency / injectables|Diazepam 10 mg injection||||amp|0|15|
+MH-0132|m132|Emergency / injectables|Atropine 1 mg/ml injection||||amp|0|10|
+MH-0133|m133|Emergency / injectables|Promethazine 25 mg injection||||amp|0|20|
+MH-0134|m134|Emergency / injectables|Ondansetron 4 mg injection||||amp|0|30|
+MH-0135|m135|Emergency / injectables|Omeprazole 40 mg injection||||vial|0|20|
+MH-0136|m136|Emergency / injectables|Furosemide 20 mg injection||||amp|0|20|
+MH-0137|m137|Emergency / injectables|Oxytocin 10 IU injection||||amp|0|20|
+MH-0138|m138|Emergency / injectables|Dextrose 5% infusion 500 ml||||bag|0|50|
+MH-0139|m139|Emergency / injectables|Water for injection 10 ml||||amp|0|100|
+MH-0140|m140|Gastrointestinal|Entamizole DS tablet|Diloxanide furoate + metronidazole|Entamizole DS|Abbott|tab|15|25|Verify generic / strength with supplier
+MH-0141|m141|Antibiotic|Ciprofloxacin 250 mg tablet|Ciprofloxacin|Cyrocin|Highnoon|tab|10|13|
+MH-0142|m142|Antibiotic|Azithromycin 250 mg tablet|Azithromycin|Azionce|Rotex|tab|10|25|
+MH-0143|m143|Antibiotic|Amoxicillin 250 mg capsule|Amoxicillin|Amoxil|GSK|cap|100|50|
+MH-0144|m144|Antibiotic|Amoxicillin suspension 125 mg/5 ml|Amoxicillin||Dr. Raza|bottle|1|5|
+MH-0145|m145|Antibiotic|Cefixime suspension 100 mg/5 ml|Cefixime||Mcolson|bottle|1|5|
+MH-0146|m146|Antibiotic|Cefixime suspension 200 mg/5 ml|Cefixime||Rotex|bottle|1|5|
+MH-0147|m147|Antibiotic|Amoxicillin + clavulanic acid suspension|Amoxicillin + clavulanic acid|Co-amoxiclav|Bosch|bottle|1|8|Strength not stated in Annex
+MH-0148|m148|Antibiotic|Levofloxacin 250 mg tablet|Levofloxacin||Highnoon|tab|10|25|
+MH-0149|m149|Respiratory / allergy|Chlorphenamine syrup|Chlorphenamine|Piriton|GSK|bottle|1|5|Strength not stated in Annex
+MH-0150|m150|Respiratory / allergy|Loratadine syrup|Loratadine|Softin|Wilsons|bottle|1|9|Strength not stated in Annex
+MH-0151|m151|Respiratory / allergy|Pheniramine maleate tablet|Pheniramine maleate|Avil|Sanofi|tab|250|250|Strength not stated in Annex
+MH-0152|m152|Analgesic / antipyretic|Detran-P 75 mg tablet||Detran-P|Sunshine|tab|20|125|Verify generic / strength with supplier
+MH-0153|m153|Analgesic / antipyretic|Entox-P tablet||Entox-P|LCI|tab|100|50|Verify generic / strength with supplier
+MH-0154|m154|Analgesic / antipyretic|Detran 50 mg tablet|Diclofenac (likely)|Detran|Sunshine|tab|20|125|Likely same as Diclofenac 50 mg - verify, then merge
+MH-0155|m155|Analgesic / antipyretic|Paracetamol + caffeine tablet|Paracetamol + caffeine|Panadol Extra|GSK|tab|100|50|
+MH-0156|m156|Analgesic / antipyretic|Paracetamol oral drops|Paracetamol|Panadol Drops|GSK|bottle|1|3|Strength not stated in Annex
+MH-0157|m157|Analgesic / antipyretic|Mefenamic acid 250 mg tablet|Mefenamic acid|Ponston|LCI|tab|600|125|
+MH-0158|m158|Analgesic / antipyretic|Wilgesic Forte tablet||Wilgesic Forte|Wilsons|tab|100|175|Verify generic / strength with supplier
+MH-0159|m159|Respiratory / allergy|Coldrex / Coldene syrup|Cold & flu combination|Coldrex / Coldene|Standpharm|bottle|1|5|
+MH-0160|m160|Respiratory / allergy|Coldrex / Coldene tablet|Cold & flu combination|Coldrex / Coldene|Standpharm|tab|100|100|
+MH-0161|m161|Gastrointestinal|Creamafin syrup|Liquid paraffin + magnesium hydroxide (likely)|Creamafin|Abbott|bottle|1|8|Verify generic / strength with supplier
+MH-0162|m162|Gastrointestinal|Cimetidine tablet|Cimetidine|Cimet|Ferozsons|tab|10|38|Strength not stated in Annex
+MH-0163|m163|Gastrointestinal|Drotaverine 40 mg tablet|Drotaverine|No-Spa|Sanofi|tab|24|38|
+MH-0164|m164|Gastrointestinal|Polycid / Similon syrup|Antacid (+ simethicone)|Polycid / Similon|Natural|bottle|1|13|Verify generic / strength with supplier
+MH-0165|m165|Nutrition / maternal|Calcium effervescent tablet (Cac-1000)|Calcium (+ vitamin C)|Cac-1000|GSK|tab|10|25|Verify generic / strength with supplier
+MH-0166|m166|Gastrointestinal|Sodium picosulfate syrup|Sodium picosulfate|Laxoberon|Martin Dow|bottle|1|7|
+MH-0167|m167|Gastrointestinal|Bacillus clausii oral suspension ampoule|Bacillus clausii|Enterogermina|Sanofi|amp|20|5|
+MH-0168|m168|Respiratory / allergy|Ammonium chloride syrup|Ammonium chloride||Care|bottle|1|13|
+MH-0169|m169|Respiratory / allergy|Hydrallin syrup||Hydrallin|Polyfine|bottle|1|10|Verify generic / strength with supplier
+MH-0170|m170|Respiratory / allergy|Serolin syrup||Serolin|Mendoza|bottle|1|3|Verify generic / strength with supplier
+MH-0171|m171|Respiratory / allergy|Terbutaline syrup|Terbutaline (likely)|Britanyl|Barrett|bottle|1|3|Verify generic / strength with supplier
+MH-0172|m172|Respiratory / allergy|Coferb drops||Coferb|Gold Mark|bottle|1|8|Verify generic / strength with supplier
+MH-0173|m173|Analgesic / antipyretic|Decatrain gel||Decatrain|Magnus|tube|1|3|Verify generic / strength with supplier
+MH-0174|m174|Antiparasitic / antimalarial|Zental / Vermox suspension|Albendazole / mebendazole|Zental / Vermox|GSK|bottle|1|5|Verify generic / strength with supplier
+MH-0175|m175|Dermatological|Clobetasol 0.05% cream|Clobetasol propionate|Dermovate|Atco|tube|1|2|
+MH-0176|m176|Nutrition / maternal|Multivitamin capsule|Multivitamin||Nawabsons|cap|100|500|
+MH-0177|m177|Nutrition / maternal|Iron polymaltose tablet|Iron polymaltose complex|Polymalt|Griffin|tab|20|150|
+MH-0178|m178|Nutrition / maternal|Omega-3 fatty acids capsule|Omega-3 fatty acids|Romega|Genetics|cap|20|10|
+MH-0179|m179|Nutrition / maternal|Calcium-P syrup|Calcium + phosphorus|Calcium-P|PDH|bottle|1|7|Verify generic / strength with supplier
+MH-0180|m180|Nutrition / maternal|Multical sachet|Calcium + multivitamin|High Q C / Multical|Nabiqasim|sachet|10|50|Verify generic / strength with supplier
+MH-0181|m181|Nutrition / maternal|Neurobedoxin Plus tablet|Vitamin B combination|Neurobedoxin Plus|Shazoo|tab|100|100|Verify generic / strength with supplier
+MH-0182|m182|Nutrition / maternal|Neurobion tablet|Vitamin B1 + B6 + B12|Neurobion|Martin Dow|tab|100|100|
+MH-0183|m183|Nutrition / maternal|Zinc sulphate syrup|Zinc sulphate|Zincat OD|Atco|bottle|1|5|
+MH-0184|m184|Dermatological|Fusidic acid + betamethasone cream|Fusidic acid + betamethasone|Fusiderm-B|Martin Dow|tube|1|2|
+MH-0185|m185|Dermatological|Fusidic acid + hydrocortisone cream|Fusidic acid + hydrocortisone|Fusiderm-H|Davis|tube|1|2|
+MH-0186|m186|Dermatological|Lotrix / Scabion lotion|Anti-scabies lotion|Lotrix / Scabion|Atco|bottle|1|3|Verify generic / strength with supplier
+MH-0187|m187|Dermatological|Quench Plus cream||Quench Plus|Feroszons|tube|1|2|Verify generic / strength with supplier
+MH-0188|m188|Cardiovascular / endocrine|Losartan 25 mg tablet|Losartan potassium||Wilsons|tab|20|50|
+MH-0189|m189|Cardiovascular / endocrine|Zodip 5 mg tablet|Amlodipine (likely)|Zodip|Zafa|tab|20|50|Likely same as Amlodipine 5 mg - verify, then merge
+MH-0190|m190|Nutrition / maternal|ADN6 tablet||ADN6|Macter|tab|30|15|Verify generic / strength with supplier
+MH-0191|m191|Analgesic / antipyretic|Aspirin dispersible tablet|Aspirin (soluble)|Disprin|Reckitt|tab|100|75|Strength not stated in Annex
+MH-0192|m192|Dental / oral|Tooth drops||Aizal / Cureit|Sharax|bottle|1|3|Verify generic / strength with supplier
+MH-0193|m193|Eye / ENT|Lidosporin ear drops|Polymyxin B + lidocaine (likely)|Lidosporin|GSK|vial|1|3|Verify generic / strength with supplier
+MH-0194|m194|Cardiovascular / endocrine|Diabeno tablet||Diabeno|High Q|tab|30|15|Verify generic / strength with supplier
+MH-0195|m195|Eye / ENT|Dexamethasone + chloramphenicol eye drops|Dexamethasone + chloramphenicol|Dexer / Dexachlor|Ethical|vial|1|5|
+MH-0196|m196|Eye / ENT|Betinsole-N drops||Betinsole N|GSK|vial|1|3|Verify generic / strength with supplier
+MH-0197|m197|Nutrition / maternal|Multivitamin drops|Multivitamin|Vidaylin|Abbott|bottle|1|5|
+MH-0198|m198|Nutrition / maternal|Miura capsule||Miura|Getz|cap|30|15|Verify generic / strength with supplier
+MH-0199|m199|Gastrointestinal|Potassium citrate syrup|Potassium citrate (likely)|Alkacitron|PDH|bottle|1|8|Verify generic / strength with supplier
+MH-0200|m200|Gastrointestinal|Cranberry sachet|Cranberry extract|Cran Max|Gold Mark|sachet|10|25|
+MH-0201|m201|Diagnostics / consumables|Blood lancets|||Roche|pcs|200|50|
+MH-0202|m202|Gastrointestinal|Dimenhydrinate 50 mg tablet|Dimenhydrinate|Gravinate|Searle|tab|100|50|
+MH-0203|m203|Cardiovascular / endocrine|Linjardy 5/25 mg tablet|Linagliptin + empagliflozin (likely)|Linjardy|CCL|tab|14|18|Verify generic / strength with supplier
+MH-0204|m204|Gastrointestinal|Domperidone suspension|Domperidone|Motilium|Aspin|bottle|1|2|
+MH-0205|m205|Gastrointestinal|Dimenhydrinate syrup|Dimenhydrinate|Gravinate|Searle|bottle|1|3|
+MH-0206|m206|Nutrition / maternal|Iron + folic acid syrup|Iron + folic acid|Polfer FA|Barrett|bottle|1|8|
+MH-0207|m207|Nutrition / maternal|Singobion capsule|Vitamin B combination|Singobion|Martin Dow|cap|30|75|Verify generic / strength with supplier
+MH-0208|m208|Nutrition / maternal|Polybion syrup|Vitamin B complex|Polybion|Martin Dow|bottle|1|10|
+MH-0209|m209|Cardiovascular / endocrine|Spiormide 40 mg tablet||Spiormide|Serle|tab|30|3|Verify generic / strength with supplier
+MH-0210|m210|Gastrointestinal|Dijex MP syrup||Dijex MP|Abbott|bottle|1|4|Verify generic / strength with supplier
+MH-0211|m211|Cardiovascular / endocrine|Zibas 5 mg tablet||Zibas|Pharmevo|pack|20|2|Verify generic / strength with supplier
+MH-0212|m212|Cardiovascular / endocrine|Warfarin 5 mg tablet|Warfarin|Warfin|Shaigan|pack|1|1|
+MH-0213|m213|Dermatological|Dexamethasone + neomycin cream|Dexamethasone + neomycin|Kanadex-N|ISIS|tube|1|3|
+MH-0214|m214|Eye / ENT|Methachlor eye drops||Methachlor|Remington|vial|1|3|Verify generic / strength with supplier
+MH-0215|m215|Neurology / mental health|Duzalta|Duloxetine (likely)|Duzalta|Pharmevo|pack|14|1|Verify generic / strength with supplier
+MH-0216|m216|Neurology / mental health|Evopride||Evopride|Pharmevo|pack|30|1|Verify generic / strength with supplier
+MH-0217|m217|Neurology / mental health|Gablin CR tablet|Pregabalin CR (likely)|Gablin CR|CCL|pack|14|1|Verify generic / strength with supplier
+MH-0218|m218|Cardiovascular / endocrine|Elzanor TXR tablet||Elzanor TXR|Tabros|pack|14|1|Verify generic / strength with supplier
+MH-0219|m219|Diagnostics / consumables|Accu-Chek Instant glucose test strips||Accu-Chek Instant|Roche|strip|50|25|`.split('\n').map(l=>l.split('|'));
+const mrec=m=>({id:m[1],code:m[0],cat:m[2],name:m[3],gen:m[4],br:m[5],mf:m[6],unit:m[7],pk:+m[8]||0,re:+m[9]||0,rm:m[10]||''});
+function masterFill(){let n=0;const have=new Map(S.meds.map(m=>[m.id,m])),mark=id=>{S.mdq=S.mdq||[];if(!S.mdq.includes(id))S.mdq.push(id);n++};
+MASTER.forEach(r=>{const b=mrec(r);const m=have.get(b.id);if(!m){S.meds.push(b);have.set(b.id,b);mark(b.id);return}let c=0;for(const k of['code','gen','br','mf','pk','rm'])if(m[k]===undefined&&b[k]){m[k]=b[k];c=1}if(c)mark(m.id)});
+let mx=0;S.meds.forEach(m=>{const q=/^MH-(\d+)$/.exec(m.code||'');if(q)mx=Math.max(mx,+q[1])});S.meds.forEach(m=>{if(!m.code){m.code='MH-'+String(++mx).padStart(4,'0');mark(m.id)}});
+if(n){S.medq=1;localStorage.mh2=JSON.stringify(S)}}
+const LOGO='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAMFBMVEX////9/v/p9/vN7fa95/Kr4e+S2Op5z+ZhxuFVwt9Twd9Twd5RwN5Mvt1HvNw9udtc83ncAAAHrklEQVR42u2Xa1RTVxaA97kJARS45wapRQl5QFVQhICKio9Apepo1VIZn7TSWh0ta6ba1tdarUodLNaOStVqfSx1lNYHD58UATEIWnCEgIyPEUgIFMGS3JPwlJB754eu0dQbrT9nLe+/c9b+zn6cffbeF52Al/soeAW8Al4CYEH1MgAP8ZCvoMIC/ijgolo6/lv5mE/zFPwfASh47cz1bSxwVBk9UvFigJXx/lppRWhD1m2jT0oR/yKAj82tFutFptAiVlbllmHseBHg8vUibVELeMkt+nTplndwN5DnAvxorU9ZjEw9Z3XYIC86TcdcLNY4SiDHNx1RfMG7FI9I/FYPUpV/TsfRYUtcZNg5ICr7UsbMbJJlGMK9zNY3ptz0N+LWj+sdROIdVuUlM/qsLykJWhAU4Ndjag/NjszNPuDq5swH6reU75eUbIFBHewnbdfkadSpefqeLd9onDptzc2d/9X7t9CByAaQ+O44wWXn4/nJ84lTHwLPpZd9URx3ZmC/iuENdqkupLF17m3PTfuedvtpDaLcJHd1YEDm8GoeMUyYasIoOv0S2vil03sgx6ecH3XuiG/amLQxyUOS+yd3brs6LWLSsSSNE4BRe0TvG1yjrpXVeerN9XpjRVtm7Pm4tXN3EmHAN7YzbMX2wxuyV2CpklJZh/QdEhw5NrlPyXGNoNPtRVe4NYdmXYq+Ed4qtrfxurBytUlkD7hWOyG58n9S4ics7U1F1/ReNHJ6MEsRBh5CGbpBVdnE77oEQoB9OdukONe7970VP+xee3+x/+SVTT3BS+ey4x5mYkEA8lNm3kRZfjbIJOx6+Z2qtz2yylt6QqK8OJ0wMLL49OKz9Z/ZlQi57qd+HVg9z/pm2YiQ1VGVakGAyvXmAqQWAL6VzFjCHtmYd+fOZtMy7sGa9xq0QoC1VDbt6q26Os56x6IEvGfQxApWjoGyWePqBdPb3dXbozfY+u4cNN4esLWc1A7demPrePeP8mLjKgRN6p1ad/kjXjvCDQNkMvzgoT+Me5A3rILwTD5hhG5arIix9P4L3dBxwAJYJ0jCIiBcgdR4c8dsQQ3Bq63+gYqc+K4W5S8GizjvZnohX2B/cBzke0rfFEiNturT4rdFbKWcowDvB5eBbLzeoKCNCsOV0W0/Gp41CRXX3gWCgFFIVTKeZ3honhqx+59jt0SvDfreIGSSbCmR7zGv/LorN3oHBkUpJgzwLF9I1BJVuYDTXjH5Bvp6xoOTpK6QAAAirbQFAAPY9i4Seg9c1D0NdnkLz1aIwABAA7BqANJrNp6982CigEnUtQ/r/r4Xm1M541taHmMANqXmY46CDlNOqGBYTYHtiROVdsLVf0MTBAC2frEKWyy9qvtTsVBq8L7gfZHZ1Zo6WX+wG9wmlQB/Tfm3c3GSckWkNJgI5NLQePOA5uH23Nqrzd3INv0edPP//iU4qKPjPk7UCxaBkX/uHq6Oaxx0mgC/9NYxghEuLZTsMHlI0ohQEaCGLWvMOupVfctAsOR9bZjHNh4wiYz22BoTJRPSYNnbWb4zQ/d6JUHWlQRQ50QEBJdaflpVtVCwLtH9f952PvzQQRroN1w2Ba0xXJBjsEjnDy39rF4Q4GJ3J7++fSwhyLpIm/XbRfjpQ4JB4nVv8AWdcOXTZaz7R1o9BnrQB9w74pn9/1STaKFnbfaqCcXCHch9wPJ1ZxK0qCfOUMveuF9bWxfQ/mvxlszUPcImAfdu+tkFKTT9mq2gtdxs4sv9D5+bs1ATf7TeWQcqOviFq+Yry8ydA+J+HJI8T7L+k/h9pwqvigzOmqK7d6dfQT//wYe7N29qrkkqO2SKLlT5q9XEWcviJ/wFRe6onsepxU2kj6fdGNTht2x4c4bTtouqVyRlb0zo07nntr1f7YWG6T7fBY7uxRbnfVqCcxrBbfu8UR1NnTD+uymzohq95twG5wCqU574a1l0V+XhGPkHnXllD3cbC/zQ82YNfiTh44d6W21N4mkbVmbbVyWl+j93mkHX7/k29S05dr2x75zwTYYVOetmvGBeQsiyJM3Kg2e7i39T2GI6Qfc7AUcfAABM0wvu1rnWUgvu3qeU8T+7vXBI7NV6JRYtbPOjvfmptdkYnGjgLW7k0WEBXebRCRImiJF4cejx+Sr2mSiJJmo1BQAAVGt4wCks0hhrAnvFHo89MIcbfl+XfJPWL0/W0oh1KaOSzmajDCzK6Xbr9gOGBabtP+2eCDsCHpn7M3bNauydBEVt0B5Lo5oGm0VkSaQLZ6P88JsonrvkCFyW1cltnwe57u107aty32C1T2YQw5hTGg4v51enV8o+71hpeDpKFJEfktMZ93qOsAAnPfcfv15F4EIW6FoOnSzLP8g+PMJih7AiXlmECY0wTIauUBQSXmUAMBOIUxCfRaaHGoDJlx3vgVdW0eCCuxNSEQ3AE4KBX7iIP2ABQMAgt4RUjQNAiCicr28ufOhjpnXAA/AEgCW2BjkQHrXoW3zMtKMGSrJbeiUkgD0ZIdUxFGYoDBSmJONuEoW0K6qNPxlR/2x6UwrlZdsIwhkAgOIAAKgQscmgMIb0u2wbUS70Hgh+JPjkjEec+cm+Y/JhcJR/vOSe2n/1a/kK+P8B/gvGdVLiMLLFWQAAAABJRU5ErkJggg==';
 const LOGO2='data:image/png;base64,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';
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // ===== EDIT: default facilities (id must be unique; type = BHU, RCPD or MHU; loc = location group heading) =====
-function seed(){return{fac:[{id:'f1',name:'BHU Gujar Khan',type:'BHU',loc:'Punjab'},{id:'f2',name:'Mobile Health Unit - Sindh',type:'MHU',loc:'Sindh'},{id:'f3',name:'MHU (Central)',type:'MHU',loc:'Islamabad'},{id:'f4',name:'BHU Muzaffarabad',type:'BHU',loc:'Azad Jammu & Kashmir (AJK)'},{id:'f5',name:'BHU Ghamkotli',type:'BHU',loc:'Azad Jammu & Kashmir (AJK)'},{id:'f6',name:'Free Medical Centre Rawalakot',type:'BHU',loc:'Azad Jammu & Kashmir (AJK)'},{id:'f7',name:'RCPD Wazirabad',type:'RCPD',loc:'Punjab'},{id:'f8',name:'RCPD Muzaffarabad',type:'RCPD',loc:'Azad Jammu & Kashmir (AJK)'},{id:'f9',name:'RCPD Kotli',type:'RCPD',loc:'Azad Jammu & Kashmir (AJK)'}],meds:MEDS.map((m,i)=>({id:'m'+String(i+1).padStart(3,'0'),cat:m[0],name:m[1],unit:m[2],re:+m[3]})),opd:[],stk:[],vis:[],perm:[],msg:[],q:[],dis:DIS.slice(),facv:2}}
-let S;try{S=JSON.parse(localStorage.mh2)}catch(e){}S=S||seed();S.q=S.q||[];S.fin=S.fin||[];S.ver=S.ver||[];S.perm=S.perm||[];S.msg=S.msg||[];if(S.facv<2){seed().fac.forEach(f=>{const i=S.fac.findIndex(x=>x.id==f.id);if(i<0)S.fac.push(f);else S.fac[i]=f});S.facv=2;S.fixq=1;localStorage.mh2=JSON.stringify(S)}(()=>{let n=0;MEDS.forEach((m,i)=>{const id='m'+String(i+1).padStart(3,'0');if(!S.meds.some(x=>x.id==id)){S.meds.push({id,cat:m[0],name:m[1],unit:m[2],re:+m[3]});n++}});if(n){S.medq=1;localStorage.mh2=JSON.stringify(S)}})();
+function seed(){return{fac:[{id:'f1',name:'BHU Gujar Khan',type:'BHU',loc:'Punjab'},{id:'f2',name:'Mobile Health Unit - Sindh',type:'MHU',loc:'Sindh'},{id:'f3',name:'MHU (Central)',type:'MHU',loc:'Islamabad'},{id:'f4',name:'BHU Muzaffarabad',type:'BHU',loc:'Azad Jammu & Kashmir (AJK)'},{id:'f5',name:'BHU Ghamkotli',type:'BHU',loc:'Azad Jammu & Kashmir (AJK)'},{id:'f6',name:'Free Medical Centre Rawalakot',type:'BHU',loc:'Azad Jammu & Kashmir (AJK)'},{id:'f7',name:'RCPD Wazirabad',type:'RCPD',loc:'Punjab'},{id:'f8',name:'RCPD Muzaffarabad',type:'RCPD',loc:'Azad Jammu & Kashmir (AJK)'},{id:'f9',name:'RCPD Kotli',type:'RCPD',loc:'Azad Jammu & Kashmir (AJK)'}],meds:MASTER.map(mrec),opd:[],stk:[],vis:[],perm:[],msg:[],q:[],dis:DIS.slice(),facv:2}}
+let S;try{S=JSON.parse(localStorage.mh2)}catch(e){}S=S||seed();S.q=S.q||[];S.fin=S.fin||[];S.ver=S.ver||[];S.perm=S.perm||[];S.msg=S.msg||[];if(S.facv<2){seed().fac.forEach(f=>{const i=S.fac.findIndex(x=>x.id==f.id);if(i<0)S.fac.push(f);else S.fac[i]=f});S.facv=2;S.fixq=1;localStorage.mh2=JSON.stringify(S)}masterFill();
 if((S.disv||0)<2){DIS.forEach(d=>{if(!S.dis.includes(d)){const k=S.dis.indexOf('Other');k<0?S.dis.push(d):S.dis.splice(k,0,d)}});S.disv=2;localStorage.mh2=JSON.stringify(S)}
 const MHC=n=>String(n||'').replace(/\bMHU\s*(?:[-–—]\s*)?Central\b/gi,'MHU (Central)');S.fac.forEach(f=>{const n=MHC(f.name);if(n!==f.name){f.name=n;S.fixq=1}});if(S.facv<5){const f3=S.fac.find(x=>x.id=='f3');if(f3&&/Islamabad|Central/i.test(f3.name))f3.name='MHU (Central)';S.facv=5;S.fixq=1;localStorage.mh2=JSON.stringify(S)}const save=()=>localStorage.mh2=JSON.stringify(S);
 const $=id=>document.getElementById(id);
@@ -205,7 +298,7 @@ const finAll=(fids,a,b)=>fids.length>0&&fids.every(f=>months(a,b).every(m=>finR(
 const stBanner=p=>finAll(p.fids,p.from,p.to)?'<p style="text-align:center;color:#157f3d"><b>✔ FINALIZED – approved by admin</b></p>':'<p style="text-align:center;color:#b45309"><b>DRAFT PREVIEW – not yet finalized by admin</b></p>';
 const fo=(sel,types)=>S.fac.filter(f=>allowed(f.id)&&(!CF||f.id==CF)&&(!types||types.includes(f.type))).map(f=>`<option value="${f.id}" ${f.id==sel?'selected':''}>${esc(f.name)} (${f.type})</option>`).join('');
 const fn=id=>MHC((S.fac.find(f=>f.id==id)||{}).name)||'?';const ft=id=>(S.fac.find(f=>f.id==id)||{}).type;
-const medOpts=()=>{const g={};S.meds.forEach(m=>(g[m.cat||'Other']=g[m.cat||'Other']||[]).push(m));return Object.entries(g).map(([c,a])=>`<optgroup label="${esc(c)}">${a.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('')}</optgroup>`).join('')};const mn=id=>(S.meds.find(m=>m.id==id)||{}).name||'?';
+const medOpts=sel=>{const g={};S.meds.forEach(m=>{if(m.off&&m.id!=sel)return;(g[m.cat||'Other']=g[m.cat||'Other']||[]).push(m)});return Object.entries(g).map(([c,a])=>`<optgroup label="${esc(c)}">${a.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('')}</optgroup>`).join('')};const mn=id=>(S.meds.find(m=>m.id==id)||{}).name||'?';
 const today=()=>new Date().toISOString().slice(0,10),thisM=()=>today().slice(0,7);
 const grp=(a,s)=>(a<18?'u18':a<=30?'a1830':a<=60?'a3060':'a60')+(s=='F'?'f':'m');
 // ---- aggregation
@@ -324,13 +417,15 @@ return`<div class="card"><h3>${cab?cabN(cab)+' – ':''}OPD (Consultation) – p
 <h3>Previous diagnostic tests (if any)</h3><div class="row"><div><label>Test / date / result (lab reports, X-ray, ECG, earlier prescriptions)</label><textarea id="vPx" rows="2"></textarea></div></div>
 <div class="row"><div><label>Complaint / notes</label><input id="pC"></div><div><label>Diagnosis <b class="rq">*</b></label><select id="pD" onchange="dxO('pD','pDo')"><option value="">Select…</option>${dOpts()}</select></div><div id="pDoW" style="display:none"><label>Specify other diagnosis <b class="rq">*</b></label><input id="pDo"></div></div>
 ${rfBlk('p')}
-<h3>Prescription</h3><div id="rx"></div><button class="b s" onclick="addRx()">+ Add medicine</button><br><br><button class="b" onclick="saveVis()">Prescribe → send to pharmacy</button></div>
+<h3>Prescription</h3><div id="rx"></div><button class="b s" onclick="addRx(1)">+ Add medicine</button> <span class="note">Type to search by name, brand, generic or code; use ↑ ↓ and Enter. Enter in the Dose box adds the next medicine.</span><br><br><button class="b" onclick="saveVis()">Prescribe → send to pharmacy</button></div>
 <div class="card"><h3>Recent prescriptions${cab?' – '+cabN(cab):''}</h3><div class="wrap">${visTable(mine.slice(-15).reverse())}</div></div>`}
 V.doc=()=>docV('');V.docM=()=>docV('M');V.docF=()=>docV('F');V.doc_=V.docM_=V.docF_=()=>{addRx();fdLoad()};
 function fdLoad(){const f=$('vF').value;$('vPM').value=PM(f);$('vPhy').value=PHY(f);if($('vCamp'))$('vCamp').value=sessionStorage.getItem('camp|'+f)||''}
-function addRx(){const d=document.createElement('div');d.className='row rx';d.innerHTML=`<div style="flex:3"><select>${medOpts()}</select></div><div><input type="number" min="1" placeholder="Qty" value="1"></div><div style="flex:2"><input placeholder="Dose e.g. 1 tab TDS x 3 days"></div>`;$('rx').appendChild(d)}
+function addRx(f){const d=document.createElement('div');d.className='row rx';d.innerHTML=`<div style="flex:3;min-width:240px">${medBox({fs:'vF',rx:1,next:'.rxq'})}</div><div style="flex:0 0 90px;min-width:80px"><input class="rxq" type="number" min="1" placeholder="Qty" value="1"></div><div style="flex:2"><input class="rxd" list="doseL" placeholder="Dose e.g. 1 tab TDS x 3 days"></div><div style="flex:0 0 40px;min-width:40px"><button type="button" class="b d" title="Remove this medicine" onclick="this.closest('.rx').remove()">✕</button></div>`;$('rx').appendChild(d);
+if(!$('doseL'))document.body.insertAdjacentHTML('beforeend','<datalist id="doseL">'+['1 tab OD','1 tab BD','1 tab TDS','1 tab QID','1 tab at night','1 cap OD','1 cap BD','1 cap TDS','5 ml BD','5 ml TDS','10 ml TDS','2 drops TDS','Apply BD','Apply TDS','1 sachet in 200 ml water TDS'].map(x=>'<option value="'+x+'">').join('')+'</datalist>');if(f)d.querySelector('.mcs').focus()}
 function saveVis(){const by=me('doc',$('vF').value);if(!by)return;if(!chk($('vF').value,$('vD').value))return;const pn=$('pN').value.trim(),age=+$('pA').value;if(!pn||$('pA').value==='')return alert('Patient name and age are required.');if(!$('pS').value)return alert('Sex is required.');if(!$('pD').value)return alert('Diagnosis is required.');if($('pD').value=='Other'&&!$('pDo').value.trim())return alert('Please specify the other diagnosis.');const pm=PM($('vF').value);if(!pm)return alert('Enter your PMDC / PMC number once (it stays until you sign out).');if(CAB&&!$('vCamp').value.trim())return alert('Enter the camp location (once – it stays until you sign out).');if($('pRf').value&&!$('pRfR').value.trim())return alert('Please give the reason for the referral.');
-const rx=[...document.querySelectorAll('.rx')].map(r=>({m:r.querySelector('select').value,q:+r.querySelectorAll('input')[0].value||0,dose:r.querySelectorAll('input')[1].value})).filter(x=>x.q>0);
+const rr=[...document.querySelectorAll('#rx .rx')],badr=rr.find(r=>r.querySelector('.mcs').value.trim()&&!r.querySelector('.mid').value);if(badr){badr.querySelector('.mcb').classList.add('bad');badr.querySelector('.mcs').focus();return alert('Please choose the medicine from the list (type to search, then click it or press Enter).')}
+const rx=rr.map(r=>({m:r.querySelector('.mid').value,q:+r.querySelector('.rxq').value||0,dose:r.querySelector('.rxd').value.trim()})).filter(x=>x.m&&x.q>0);
 const code=vcode('RX'),fid=$('vF').value,sx=$('pS').value,d=$('vD').value,mr=mrNo(d,fid),bmi=bmiOf($('vW').value,$('vH').value);
 const vt={bp:$('vBP').value,pr:$('vPR').value,tp:$('vT').value,sp:$('vSp').value,rr:$('vRR').value,rbs:$('vG').value,wt:$('vW').value,ht:$('vH').value,bmi,bc:bmiCat(bmi,age),dg:$('vX').value,pdx:$('vPx').value};
 put('ver',{id:code,t:'Prescription',fid,fn:fnF(fid),date:d,by,pmdc:pm,cab:CAB,ini:ini(pn),age,sex:sx,n:rx.length,status:'Prescribed'});
@@ -527,17 +622,90 @@ if(h[0]==0x50&&h[1]==0x4b)return parseXlsx(buf);
 if(h[0]==0xD0&&h[1]==0xCF)throw new Error('This is an old .xls file. Open it in Excel and use Save As → Excel Workbook (.xlsx) or CSV, then upload again.');
 return parseCsv(new TextDecoder().decode(buf))}
 // ---- column guessing
-const XL_F={name:[/medicine|medicin|drug/i,/item|product|description/i,/name/i],bal:[/clos/i,/balance|available|remain|in hand|on hand|stock/i,/qty|quantity/i],con:[/consum/i,/issue|used|dispens/i],unit:[/^unit|uom/i],re:[/re-?order|min/i],cat:[/categor|group|class/i]};
-function guessCols(hdr){const used=new Set(),g={};for(const k of['name','con','bal','unit','re','cat']){g[k]=-1;for(const rx of XL_F[k]){const i=hdr.findIndex((h,j)=>!used.has(j)&&rx.test(String(h)));if(i>=0){g[k]=i;used.add(i);break}}}return g}
+const XL_F={code:[/code|sku/i],name:[/medicine|medicin|drug/i,/item|product|description/i,/name/i],bal:[/clos/i,/balance|available|remain|in hand|on hand|stock/i,/qty|quantity/i],con:[/consum/i,/issue|used|dispens/i],unit:[/^unit|uom/i],re:[/re-?order|min/i],cat:[/categor|group|class/i]};
+function guessCols(hdr){const used=new Set(),g={};for(const k of['code','name','con','bal','unit','re','cat']){g[k]=-1;for(const rx of XL_F[k]){const i=hdr.findIndex((h,j)=>!used.has(j)&&rx.test(String(h)));if(i>=0){g[k]=i;used.add(i);break}}}return g}
 function findHdr(rows){let best=0,bs=-1;rows.slice(0,25).forEach((r,i)=>{const s=r.filter(c=>/medicine|drug|item|balance|stock|consum|issued|closing|opening|quantity|qty/i.test(String(c))).length;if(s>bs){bs=s;best=i}});return best}
 const xlNum=v=>{if(v==null)return null;const s=String(v).replace(/[,\s]/g,'');if(s===''||s=='-')return null;const n=Number(s);return isFinite(n)?n:NaN};
 const xlNorm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
 const xlLoose=s=>String(s||'').toLowerCase().replace(/\b(tablets?|tabs?|capsules?|caps?|syrup|suspension|injection|inj|cream|ointment|drops?|sachet)\b/g,'').replace(/[^a-z0-9]/g,'');
 
+// ===== Medicines master: codes, searchable picker, admin master upload (v9) =====
+function nextCode(){let mx=0;S.meds.forEach(m=>{const q=/^MH-(\d+)$/.exec(m.code||'');if(q)mx=Math.max(mx,+q[1])});return'MH-'+String(mx+1).padStart(4,'0')}
+const mcN=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+const mcLev=(a,b)=>{const d=[];for(let i=0;i<=a.length;i++){d[i]=[i];for(let j=1;j<=b.length;j++)d[i][j]=i?0:j}for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return d[a.length][b.length]};
+const mcIdx=()=>S.meds.filter(m=>!m.off).map(m=>{const nm=mcN(m.name),h=mcN([m.name,m.gen,m.br,m.mf,m.cat,m.code].join(' '));return{m,nm,w:nm.split(' '),h,hw:h.split(' ')}});
+function mcScore(x,t){let s=0;for(const k of t){if(x.nm.startsWith(k));else if(x.w.some(w=>w.startsWith(k)))s+=1;else if(x.h.includes(k))s+=2;else if(k.length>=4&&x.hw.some(w=>w.length>=k.length-1&&mcLev(k,w.slice(0,k.length))<=(k.length>=7?2:1)))s+=3;else return-1}return s}
+function mcStk(fid){if(!fid)return null;const r={};let any=0;S.stk.forEach(s=>{if(s.del||s.fid!=fid)return;any=1;r[s.mid]=(r[s.mid]||0)+(s.type=='issue'?-1:1)*(+s.qty||0)});return any?r:null}
+const medBox=(o={})=>`<div class="mcb"${o.fs?` data-fs="${o.fs}"`:''}${o.rx?' data-rx="1"':''}${o.next?` data-next="${o.next}"`:''}><input class="mcs" type="text" autocomplete="off" placeholder="Type to search – name, brand, generic or code…" aria-label="Medicine"><button type="button" class="mct" tabindex="-1" aria-label="Show full list">▼</button><input type="hidden" class="mid"${o.id?` id="${o.id}"`:''}><div class="mcl"></div></div>`;
+function mcOpen(b){if(!b._ix){b._ix=mcIdx();const f=b.dataset.fs&&$(b.dataset.fs);b._sk=f?mcStk(f.value):null}
+const inp=b.querySelector('.mcs'),l=b.querySelector('.mcl'),t=mcN(inp.value).split(' ').filter(Boolean),sk=b._sk;let a;
+if(t.length)a=b._ix.map(x=>({x,s:mcScore(x,t)})).filter(o=>o.s>=0).sort((u,v)=>u.s-v.s||((sk&&sk[v.x.m.id]>0)-(sk&&sk[u.x.m.id]>0))||u.x.nm.localeCompare(v.x.nm)).slice(0,60).map(o=>o.x);
+else a=b._ix.slice().sort((u,v)=>(u.m.cat||'').localeCompare(v.m.cat||'')||u.nm.localeCompare(v.nm));
+const hl=s=>t.length?String(s).split(new RegExp('('+t.join('|')+')','i')).map((p,i)=>i%2?'<mark>'+esc(p)+'</mark>':esc(p)).join(''):esc(s);
+let last='';b._it=a.map(x=>x.m);
+l.innerHTML=a.length?a.map((x,i)=>{const m=x.m,av=sk?(sk[m.id]||0):null,g=(!t.length&&m.cat!=last)?(last=m.cat,'<div class="mg">'+esc(m.cat||'Other')+'</div>'):'';
+return g+`<div class="mi${i==b._a?' a':''}" data-i="${i}"><div><b>${hl(m.name)}</b><small>${[m.gen&&hl(m.gen),m.br&&hl(m.br),m.mf&&esc(m.mf),t.length&&m.cat?esc(m.cat):''].filter(Boolean).join(' · ')}</small></div>${av===null?'':`<span class="tag ${av>0?'ok':'out'}" title="Stock available">${av>0?av:'0'}</span>`}</div>`}).join(''):'<div class="mn">No medicine found – check the spelling, or ask the admin to add it to the master list.</div>';
+l.classList.add('on');if(b._a>=0)mcAct(b)}
+function mcAct(b){const l=b.querySelector('.mcl');l.querySelectorAll('.mi').forEach(e=>e.classList.toggle('a',+e.dataset.i==b._a));const e=l.querySelector('.mi.a');e&&e.scrollIntoView({block:'nearest'})}
+function mcClose(b){b.querySelector('.mcl').classList.remove('on');b._ix=null;b._sk=null}
+function mcPick(b,i){const m=(b._it||[])[i];if(!m)return;const h=b.querySelector('.mid');
+if(b.dataset.rx&&[...document.querySelectorAll('#rx .mid')].some(x=>x!==h&&x.value==m.id)){alert(m.name+' is already in this prescription.');return}
+h.value=m.id;b.querySelector('.mcs').value=m.name;b.classList.remove('bad');mcClose(b);
+const nx=b.dataset.next&&(b.closest('.rx')||document).querySelector(b.dataset.next);if(nx){nx.focus();nx.select&&nx.select()}}
+document.addEventListener('input',e=>{const i=e.target.closest&&e.target.closest('.mcs');if(!i)return;const b=i.closest('.mcb');b.querySelector('.mid').value='';b.classList.remove('bad');b._a=mcN(i.value)?0:-1;mcOpen(b)});
+document.addEventListener('focusin',e=>{const i=e.target.closest&&e.target.closest('.mcs');if(!i)return;const b=i.closest('.mcb');if(!b.querySelector('.mcl.on')){b._a=-1;mcOpen(b);i.select()}});
+document.addEventListener('mousedown',e=>{const T=e.target;if(!T.closest)return;const it=T.closest('.mcl .mi');if(it){e.preventDefault();mcPick(it.closest('.mcb'),+it.dataset.i);return}
+if(T.closest('.mcl')){e.preventDefault();return}
+const tg=T.closest('.mct');if(tg){e.preventDefault();const b=tg.closest('.mcb');if(b.querySelector('.mcl.on'))mcClose(b);else{b._a=-1;b.querySelector('.mcs').focus();mcOpen(b)}return}
+document.querySelectorAll('.mcl.on').forEach(l=>{const b=l.closest('.mcb');if(!b.contains(T))mcClose(b)})});
+document.addEventListener('keydown',e=>{const T=e.target;if(!T.classList)return;
+if(T.classList.contains('rxd')&&e.key=='Enter'){e.preventDefault();addRx(1);return}
+if(!T.classList.contains('mcs'))return;const b=T.closest('.mcb'),on=b.querySelector('.mcl.on'),n=(b._it||[]).length;
+if(e.key=='ArrowDown'||e.key=='ArrowUp'){e.preventDefault();if(!on){b._a=-1;mcOpen(b);return}if(!n)return;b._a=e.key=='ArrowDown'?(b._a+1)%n:(b._a<=0?n-1:b._a-1);mcAct(b)}
+else if(e.key=='Enter'){if(on&&b._a>=0){e.preventDefault();mcPick(b,b._a)}}
+else if(e.key=='Escape'){mcClose(b)}
+else if(e.key=='Tab'&&on&&b._a>=0&&T.value.trim()&&!b.querySelector('.mid').value){e.preventDefault();mcPick(b,b._a)}});
+document.addEventListener('focusout',e=>{const i=e.target.closest&&e.target.closest('.mcs');if(!i)return;const b=i.closest('.mcb');setTimeout(()=>{if(b.contains(document.activeElement))return;mcClose(b);const h=b.querySelector('.mid');if(h.value){const m=S.meds.find(x=>x.id==h.value);if(m)i.value=m.name}else b.classList.toggle('bad',!!i.value.trim())},120)});
+// ---- admin: master list upload (Excel / CSV). Match by Code, then by name. Blank cells keep the old value.
+const MU_F={code:[/code|sku/i],gen:[/generic/i],br:[/brand/i],mf:[/manufact|company|supplier|mfr/i],cat:[/categor|group|class/i],unit:[/^unit|uom/i],pk:[/pack/i],re:[/re-?order|min/i],st:[/status|active/i],rm:[/remark|note/i],name:[/medicine|drug|item|product|name/i]};
+const MU_L={name:'Name',gen:'Generic',br:'Brand',mf:'Manufacturer',cat:'Category',unit:'Unit',pk:'Pack',re:'Reorder',off:'Status',rm:'Remarks'};
+let MU=null;
+function muCols(h){const used=new Set(),g={};for(const k of['code','gen','br','mf','cat','unit','pk','re','st','rm','name']){g[k]=-1;const i=h.findIndex((x,j)=>!used.has(j)&&MU_F[k].some(rx=>rx.test(String(x))));if(i>=0){g[k]=i;used.add(i)}}return g}
+async function muLoad(f){const p=$('muP');if(!f){MU=null;p.innerHTML='';return}p.innerHTML='<p class="note">Reading file…</p>';
+try{const sh=await readSheets(f);let best=null;for(const s of sh){if(/how to|read ?me|^lists?$/i.test(s.name))continue;for(let r=0;r<Math.min(25,s.rows.length);r++){const g=muCols(s.rows[r].map(String));if(g.name>=0&&(g.code>=0||g.cat>=0||g.unit>=0)){if(!best||s.rows.length>best.rows.length)best={rows:s.rows,g,hr:r,sheet:s.name};break}}}
+if(!best)throw new Error('No header row found. The file needs at least the columns "Medicine Name" and "Code" (or Category / Unit). Use the template.');MU={...best,file:f.name};muPrev()}catch(e){MU=null;p.innerHTML='<p style="color:var(--er)"><b>Could not read the file:</b> '+esc(e.message)+'</p>'}}
+function muRows(){if(!MU)return[];const{rows,g,hr}=MU,v=(r,k)=>g[k]<0?'':String(r[g[k]]??'').trim(),byC={},byN={},seen=new Set(),out=[];
+S.meds.forEach(m=>{if(m.code)byC[m.code.toLowerCase()]=m;byN[xlNorm(m.name)]=m});
+rows.slice(hr+1).forEach((r,i)=>{const nm=v(r,'name'),cd=v(r,'code');if(!nm&&!cd)return;const o={i:i+hr+2,cd,nm,err:'',ch:[],m:null,f:{}};
+const m=(cd&&byC[cd.toLowerCase()])||(nm&&byN[xlNorm(nm)])||null;o.m=m;
+const f={name:nm,gen:v(r,'gen'),br:v(r,'br'),mf:v(r,'mf'),cat:v(r,'cat'),unit:v(r,'unit').toLowerCase(),rm:v(r,'rm')},pk=v(r,'pk'),re=v(r,'re'),st=v(r,'st');
+if(pk!==''){const n=xlNum(pk);if(isNaN(n)||n<0)o.err='Pack size is not a number';else f.pk=n}
+if(re!==''){const n=xlNum(re);if(isNaN(n)||n<0)o.err='Reorder level is not a number';else f.re=n}
+if(st!=='')f.off=/^(inactive|disabled|discontinued|retired|no|0|off)/i.test(st)?1:0;
+if(!m&&!nm)o.err='Medicine name missing';
+const key=m?m.id:'new:'+xlNorm(nm);if(!o.err&&seen.has(key))o.err='Duplicate row in file';seen.add(key);o.f=f;
+if(m)for(const k in f){if(f[k]===''||f[k]===undefined)continue;const cur=k=='off'?(m.off?1:0):(m[k]??'');if(String(cur)!==String(f[k]))o.ch.push(k)}
+o.st=o.err?'err':!m?'new':o.ch.length?'upd':'same';out.push(o)});
+if($('muX')&&$('muX').checked)S.meds.forEach(m=>{if(!m.off&&!seen.has(m.id))out.push({st:'off',m,cd:m.code,nm:m.name,ch:[],f:{},i:'–'})});return out}
+function muPrev(){const p=$('muP');if(!MU||!p)return;const R=muRows(),c=k=>R.filter(r=>r.st==k).length,show=R.filter(r=>r.st!='same');
+p.innerHTML=`<p><b>${esc(MU.file)}</b> (sheet “${esc(MU.sheet)}”) – <span class="tag ok">${c('new')} new</span> <span class="tag lo">${c('upd')} to update</span> ${c('off')?`<span class="tag out">${c('off')} to set Inactive</span> `:''}<span class="tag ok" style="background:#eef2f0;color:#555">${c('same')} unchanged</span> ${c('err')?`<span class="tag out">${c('err')} with problems (skipped)</span>`:''}</p>
+<div class="wrap" style="max-height:340px;overflow:auto"><table><tr><th>Row</th><th></th><th>Code</th><th>Medicine</th><th>What changes</th></tr>${show.slice(0,400).map(r=>`<tr><td>${r.i}</td><td><span class="tag ${r.st=='new'?'ok':r.st=='err'||r.st=='off'?'out':'lo'}">${{new:'NEW',upd:'UPDATE',off:'INACTIVE',err:'SKIPPED'}[r.st]}</span></td><td>${esc(r.m?r.m.code||'':r.cd||'(auto)')}</td><td>${esc(r.nm||r.m&&r.m.name||'')}</td><td class="note">${r.err?esc(r.err):r.st=='new'?esc([r.f.cat,r.f.unit].filter(Boolean).join(' · ')):r.st=='off'?'Not in file':r.ch.map(k=>MU_L[k]+': '+esc(k=='off'?(r.m.off?'Inactive':'Active'):r.m[k]??'–')+' → '+esc(k=='off'?(r.f.off?'Inactive':'Active'):r.f[k])).join('<br>')}</td></tr>`).join('')||'<tr><td colspan="5" class="note">Nothing to change – the file matches the current list.</td></tr>'}</table></div>
+<p style="margin-top:8px"><button class="b" onclick="muApply()" ${c('new')+c('upd')+c('off')?'':'disabled'}>Apply to master list</button> <button class="b s" onclick="MU=null;$('muF').value='';$('muP').innerHTML=''">Cancel</button> <span class="note">Tip: download the current list first (button above) as a backup.</span></p>`}
+function muApply(){const by=me();if(!by)return;const R=muRows(),ok=R.filter(r=>['new','upd','off'].includes(r.st));if(!ok.length)return;const n=k=>R.filter(r=>r.st==k).length;
+if(!confirm('Apply to the master list?\n'+n('new')+' new, '+n('upd')+' updated'+(n('off')?', '+n('off')+' set to Inactive':'')+'.'))return;
+const now=new Date().toISOString(),q=id=>{const t='meds:'+id;if(!S.q.includes(t))S.q.push(t)};
+ok.forEach(r=>{if(r.st=='off'){r.m.off=1;r.m.u=now;q(r.m.id);return}
+if(r.st=='upd'){const m=r.m;r.ch.forEach(k=>{if(k=='off'){r.f.off?m.off=1:delete m.off}else m[k]=r.f[k]});if(!m.code)m.code=nextCode();m.u=now;q(m.id);return}
+const f=r.f,code=r.cd&&!S.meds.some(x=>(x.code||'').toLowerCase()==r.cd.toLowerCase())?r.cd:nextCode(),id='mc_'+code.toLowerCase().replace(/[^a-z0-9]/g,'');
+const m={id,code,cat:f.cat||'Other',name:f.name,gen:f.gen||'',br:f.br||'',mf:f.mf||'',unit:f.unit||'unit',pk:f.pk||0,re:f.re||0,rm:f.rm||'',u:now};if(f.off)m.off=1;S.meds.push(m);q(id)});
+save();badge();sync();const nn=ok.length;MU=null;$('muF').value='';$('muP').innerHTML=`<p><span class="tag ok">✔ ${nn} change(s) saved</span> <span class="note">${navigator.onLine?'Uploading to the central server…':'Saved on this device – uploads automatically when the internet returns.'} Doctors and the pharmacy see the new list immediately.</span></p>`;$('muS').innerHTML=muSum()}
+const muSum=()=>`<p class="note"><b>${S.meds.filter(m=>!m.off).length}</b> active medicines · ${S.meds.filter(m=>m.off).length} inactive</p>`;
+const muTpl=()=>xlTpl('medicine_master_'+today()+'.csv');
+
 // ===== Stock upload from Excel / CSV (balance + consumption) =====
 let XS={sheets:null,si:0,hr:0,c:{},file:'',ov:{}};
 const xlCard=()=>`<div class="card"><h3>Upload medicines Excel – balance &amp; consumption</h3>
-<p class="note">Upload an Excel (.xlsx) or CSV file with one row per medicine: <b>Medicine</b> and <b>Qty</b> (stock in hand). <b>Consumption is not needed</b> – it is calculated automatically from pharmacy dispensing, with days-left and replenishment alerts shown above. Optional columns: Consumption, Unit, Reorder level, Category. It is loaded for the facility selected under "Medicine stock" above. Works offline – saved on this device and sent to the central server automatically when online.</p>
+<p class="note">Upload an Excel (.xlsx) or CSV file with one row per medicine: <b>Medicine</b> and <b>Qty</b> (stock in hand). <b>Consumption is not needed</b> – it is calculated automatically from pharmacy dispensing, with days-left and replenishment alerts shown above. Medicines are matched by <b>Code</b> (then by name) – use the template. Optional columns: Consumption, Unit, Reorder level, Category. It is loaded for the facility selected under "Medicine stock" above. Works offline – saved on this device and sent to the central server automatically when online.</p>
 <div class="row"><div><label>As-of date (stock date)</label><input type="date" id="xlD" value="${today()}" onchange="xlPrev()"></div>
 <div><label>Qty column means</label><select id="xlB" onchange="xlPrev()"><option value="c">Current stock in hand (Qty / closing balance)</option><option value="o">Opening balance (before consumption)</option></select></div>
 <div><label>How to apply</label><select id="xlA" onchange="xlPrev()"><option value="s">Set stock to match the file (monthly report)</option><option value="a">Add as new stock received</option></select></div></div>
@@ -548,11 +716,11 @@ async function xlLoad(f){const p=$('xlP');if(!f){XS.sheets=null;p.innerHTML='';r
 try{const sh=await readSheets(f);XS={sheets:sh,si:sh.reduce((b,s,i)=>s.rows.length>sh[b].rows.length?i:b,0),hr:0,c:{},file:f.name,ov:{}};xlInit()}catch(e){XS.sheets=null;p.innerHTML='<p style="color:var(--er)"><b>Could not read the file:</b> '+esc(e.message)+'</p>'}}
 function xlInit(){const r=XS.sheets[XS.si].rows;XS.hr=findHdr(r);XS.c=guessCols(r[XS.hr]||[]);XS.ov={};xlPrev()}
 function xlCols(k){const h=(XS.sheets[XS.si].rows[XS.hr]||[]),n=Math.max(h.length,...XS.sheets[XS.si].rows.slice(XS.hr+1,XS.hr+30).map(r=>r.length));return`<select onchange="XS.c.${k}=+this.value;XS.ov={};xlPrev()"><option value="-1">— none —</option>${Array.from({length:n},(_,j)=>`<option value="${j}" ${XS.c[k]==j?'selected':''}>${esc(String(h[j]||'').trim()||'Column '+(j+1))}</option>`).join('')}</select>`}
-function xlRows(){const sh=XS.sheets[XS.si].rows,c=XS.c,fid=$('sF').value,st=stock(fid),cl=$('xlB').value=='c',set=$('xlA').value=='s',byN={},byL={};
-S.meds.forEach(m=>{byN[xlNorm(m.name)]=m;(byL[xlLoose(m.name)]=byL[xlLoose(m.name)]||[]).push(m)});const out=[];
-sh.slice(XS.hr+1).forEach((x,k)=>{const nm=String(x[c.name]??'').trim();if(c.name<0||!nm)return;const bal=c.bal<0?null:xlNum(x[c.bal]),con=c.con<0?null:xlNum(x[c.con]);if(bal===null&&con===null)return;
+function xlRows(){const sh=XS.sheets[XS.si].rows,c=XS.c,fid=$('sF').value,st=stock(fid),cl=$('xlB').value=='c',set=$('xlA').value=='s',byN={},byL={},byC={};
+S.meds.forEach(m=>{if(m.code)byC[m.code.toLowerCase()]=m;byN[xlNorm(m.name)]=m;(byL[xlLoose(m.name)]=byL[xlLoose(m.name)]||[]).push(m)});const out=[];
+sh.slice(XS.hr+1).forEach((x,k)=>{const cm=c.code>=0&&byC[String(x[c.code]??'').trim().toLowerCase()],nm=String(c.name<0?'':x[c.name]??'').trim()||(cm?cm.name:'');if(!nm)return;const bal=c.bal<0?null:xlNum(x[c.bal]),con=c.con<0?null:xlNum(x[c.con]);if(bal===null&&con===null)return;
 const r={i:k,nm,bal,con,unit:c.unit<0?'':String(x[c.unit]||'').trim(),re:c.re<0?0:xlNum(x[c.re])||0,cat:c.cat<0?'':String(x[c.cat]||'').trim(),m:null,approx:0,act:0,isNew:0,err:''};
-let m=byN[xlNorm(nm)];r.ex=!!m;if(!m){const a=byL[xlLoose(nm)];if(a&&a.length==1){m=a[0];r.approx=1}}r.m=m||null;
+let m=(c.code>=0&&byC[String(x[c.code]??'').trim().toLowerCase()])||byN[xlNorm(nm)];r.ex=!!m;if(!m){const a=byL[xlLoose(nm)];if(a&&a.length==1){m=a[0];r.approx=1}}r.m=m||null;
 const ov=XS.ov[k];if(ov=='skip')r.m=null,r.sk=1;else if(ov=='new'){r.m=null;r.isNew=1}else if(ov){r.m=S.meds.find(z=>z.id==ov)||null;r.approx=0}
 if(isNaN(bal)||isNaN(con))r.err='Not a number';else if((bal!==null&&bal<0)||(con!==null&&con<0))r.err='Negative value';
 r.mid=r.m?r.m.id:null;r.cur=r.m?(st.find(s=>s.m.id==r.mid)||{av:0}).av:0;
@@ -563,7 +731,7 @@ function xlPrev(){const p=$('xlP');if(!XS.sheets||!p)return;const R=xlRows(),opt
 const hdrs=XS.sheets[XS.si].rows;
 p.innerHTML=`<h4 style="margin:12px 0 6px">1. Check the columns</h4><div class="row">${XS.sheets.length>1?`<div><label>Sheet</label><select onchange="XS.si=+this.value;xlInit()">${XS.sheets.map((s,i)=>`<option value="${i}" ${i==XS.si?'selected':''}>${esc(s.name)}</option>`).join('')}</select></div>`:''}
 <div><label>Header row no.</label><input type="number" min="1" value="${XS.hr+1}" onchange="XS.hr=Math.max(0,+this.value-1);XS.c=guessCols(XS.sheets[XS.si].rows[XS.hr]||[]);XS.ov={};xlPrev()"></div>
-<div><label>Medicine *</label>${xlCols('name')}</div><div><label>Qty / Balance</label>${xlCols('bal')}</div><div><label>Consumption (optional)</label>${xlCols('con')}</div><div><label>Unit</label>${xlCols('unit')}</div><div><label>Reorder level</label>${xlCols('re')}</div><div><label>Category</label>${xlCols('cat')}</div></div>
+<div><label>Code</label>${xlCols('code')}</div><div><label>Medicine *</label>${xlCols('name')}</div><div><label>Qty / Balance</label>${xlCols('bal')}</div><div><label>Consumption (optional)</label>${xlCols('con')}</div><div><label>Unit</label>${xlCols('unit')}</div><div><label>Reorder level</label>${xlCols('re')}</div><div><label>Category</label>${xlCols('cat')}</div></div>
 <h4 style="margin:12px 0 6px">2. Review – facility: ${esc(fn(fid))} · file: ${esc(XS.file)}</h4>
 <p><span class="tag ok">${ok.length} will be imported</span> ${bad.length?`<span class="tag lo">${bad.length} need attention (skipped unless you fix them)</span> `:''}${nw?`<span class="tag ok">${nw} new medicine(s) will be added to the list</span> `:''}
 <span class="note">Posts ${ok.reduce((t,r)=>t+(r.rec>0?1:0),0)} received, ${ok.reduce((t,r)=>t+(r.rec<0?1:0),0)} correction(s), ${ok.reduce((t,r)=>t+(r.iss?1:0),0)} consumption entries.</span></p>
@@ -575,13 +743,14 @@ function xlImport(){const by=me();if(!by)return;const fid=$('sF').value,d=$('xlD
 if(S.stk.some(s=>!s.del&&s.fid==fid&&s.date==d&&s.src=='xlsx')&&!confirm('An Excel upload already exists for this facility and date. Importing again can double-count. Continue?'))return;
 if(!confirm('Import '+R.length+' medicine(s) into '+fn(fid)+' as of '+d+'?'))return;
 const batch=uid(),now=new Date().toISOString();let k=0;const nid=()=>uid()+(k++).toString(36);
-R.forEach(r=>{let mid=r.mid;if(r.isNew){mid=nid();S.meds.push({id:mid,name:r.nm,unit:r.unit||'unit',re:+r.re||0,cat:r.cat||'Other',u:now});S.q.push('meds:'+mid)}
+R.forEach(r=>{let mid=r.mid;if(r.isNew){mid=nid();S.meds.push({id:mid,code:nextCode(),name:r.nm,unit:r.unit||'unit',re:+r.re||0,cat:r.cat||'Other',u:now});S.q.push('meds:'+mid)}
 const add=(type,qty)=>{if(!qty&&!(type=='receive'&&r.bal===0&&!r.iss))return;const o={id:nid(),fid,mid,type,qty,date:d,by,src:'xlsx',batch,file:XS.file,u:now};S.stk.push(o);S.q.push('stk:'+o.id)};add(r.rec<0?'adjust':'receive',r.rec);add('issue',r.iss);if(!r.isNew&&r.m&&isA()&&XS.c.re>=0&&+r.re>0&&+r.m.re!=+r.re){r.m.re=+r.re;r.m.u=now;S.q.includes('meds:'+r.m.id)||S.q.push('meds:'+r.m.id)}});
 save();badge();sync();XS.sheets=null;$('xlF').value='';$('xlP').innerHTML=`<p><span class="tag ok">✔ ${R.length} medicine(s) imported</span> <span class="note">${navigator.onLine?'Uploading to the central server…':'Saved on this device – will upload automatically when the internet returns.'}</span></p>`;stkL();xlHist()}
 function xlHist(){const el=$('xlH');if(!el)return;const fid=$('sF').value,g={};S.stk.filter(s=>!s.del&&s.fid==fid&&s.src=='xlsx').forEach(s=>{const b=g[s.batch]=g[s.batch]||{b:s.batch,d:s.date,f:s.file,u:s.u||'',by:s.by,m:new Set()};b.m.add(s.mid)});
 const a=Object.values(g).sort((x,y)=>x.u<y.u?1:-1);el.innerHTML=a.length?`<table><tr><th>Stock date</th><th>File</th><th>Medicines</th><th>Uploaded by</th><th>Uploaded</th><th></th></tr>${a.map((b,i)=>`<tr><td>${b.d}</td><td>${esc(b.f||'')}</td><td>${b.m.size}</td><td>${esc((b.by||{}).name||'')}</td><td>${b.u?new Date(b.u).toLocaleString('en-GB'):''}</td><td>${i==0?`<button class="b d" onclick="xlUndo('${b.b}')">Undo</button>`:'<span class="note">–</span>'}</td></tr>`).join('')}</table><p class="note">Only the most recent upload can be undone (so balances stay correct). Medicines added to the master list by an upload stay in the list.</p>`:'<span class="note">No Excel uploads yet for this facility.</span>'}
 function xlUndo(b){const by=me();if(!by)return;const a=S.stk.filter(s=>s.batch==b&&!s.del);if(!a.length)return;if(!chk(a[0].fid,a[0].date))return;if(!confirm('Undo this upload ('+a.length+' stock entries)?'))return;const now=new Date().toISOString();a.forEach(s=>{s.del=true;s.ed={by,at:now,del:1};s.u=now;if(!S.q.includes('stk:'+s.id))S.q.push('stk:'+s.id)});save();badge();sync();stkL();xlHist()}
-function xlTpl(){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"',rows=[['Medicine','Balance','Consumption','Unit','Reorder level','Category'],...S.meds.map(m=>[m.name,'','',m.unit,m.re,m.cat])];dl(new Blob(['\uFEFF'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv'}),'medicine_stock_template.csv')}
+const mRow=m=>[m.code||'',m.cat||'',m.name,m.gen||'',m.br||'',m.mf||'',m.unit||'',m.pk||'',m.re||'',m.off?'Inactive':'Active','','',m.rm||''];
+function xlTpl(fn){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"',rows=[['Code','Category','Medicine Name','Generic Name','Brand','Manufacturer','Unit','Pack Size','Reorder Level','Status','Balance','Consumption','Remarks'],...S.meds.map(mRow)];dl(new Blob(['\uFEFF'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv'}),fn||'medicine_stock_template.csv')}
 
 // ===== Messages: delete (admin only) =====
 function delMsg(id){if(!isA())return alert('Only the admin can delete messages.');const by=me();if(!by)return;const m=S.msg.find(x=>x.id==id);if(!m||!confirm('Delete this message for everyone? Facilities will no longer see it.'))return;m.del=true;m.ed={by,at:new Date().toISOString(),del:1};touch('msg',m);msgL()}
@@ -605,7 +774,7 @@ c2.innerHTML=`<table><tr><th>Record type</th><th>On this device</th><th>On centr
 
 // stock
 V.stk=()=>`<div id="sAl"></div><div class="card"><h3>Medicine stock – available vs consumption</h3><div class="row"><div><label>Facility (BHU / MHU)</label><select id="sF" onchange="stkL();xlHist();xlPrev()">${fo('',['BHU','MHU'])}</select></div></div><div class="wrap" id="sT"></div></div>
-<div class="card"><h3>Record stock transaction</h3><div class="row"><div style="flex:2"><label>Medicine</label><select id="tM">${medOpts()}</select></div><div><label>Type</label><select id="tT"><option value="receive">Received / opening</option><option value="issue">Consumed / issued (BHU)</option><option value="adjust">Adjustment (+)</option></select></div><div><label>Qty</label><input type="number" min="1" id="tQ"></div><div><label>Date</label><input type="date" id="tD" value="${today()}"></div><div><button class="b" onclick="addTx()">Save</button></div></div><p class="note">MHU consumption is posted automatically when the pharmacy dispenses a prescription.</p></div>${can('stk')?xlCard():''}`;
+<div class="card"><h3>Record stock transaction</h3><div class="row"><div style="flex:2"><label>Medicine</label>${medBox({fs:'sF',id:'tM',next:'#tQ'})}</div><div><label>Type</label><select id="tT"><option value="receive">Received / opening</option><option value="issue">Consumed / issued (BHU)</option><option value="adjust">Adjustment (+)</option></select></div><div><label>Qty</label><input type="number" min="1" id="tQ"></div><div><label>Date</label><input type="date" id="tD" value="${today()}"></div><div><button class="b" onclick="addTx()">Save</button></div></div><p class="note">MHU consumption is posted automatically when the pharmacy dispenses a prescription.</p></div>${can('stk')?xlCard():''}`;
 V.stk_=()=>{stkL();xlHist()};
 function stkRate(fid){const lim=new Date(Date.now()-30*864e5).toISOString().slice(0,10),r={},is=S.stk.filter(s=>!s.del&&s.fid==fid&&s.type=='issue'&&s.date>=lim);if(!is.length)return r;const first=is.reduce((a,x)=>x.date<a?x.date:a,'9999'),span=Math.max(7,Math.min(30,Math.round((Date.now()-new Date(first))/864e5)+1));is.forEach(x=>r[x.mid]=(r[x.mid]||0)+ +x.qty);Object.keys(r).forEach(k=>r[k]/=span);return r}
 function stkInfo(fid){const rt=stkRate(fid);const tr=new Set(S.stk.filter(x=>!x.del&&x.fid==fid).map(x=>x.mid));return stock(fid).filter(s=>tr.has(s.m.id)).map(s=>{const d=rt[s.m.id]||0,days=d>0?Math.floor(s.av/d):null,lv=s.av<=0?'out':s.av<=s.m.re?'low':(days!=null&&days<=14?'soon':'ok'),need=lv=='ok'?0:Math.max(Math.ceil((s.m.re||0)*2-s.av),Math.ceil(d*30-s.av),0);return{...s,d,days,lv,need}})}
@@ -614,7 +783,7 @@ function stkL(){const f=$('sF').value,a=stkInfo(f),al=a.filter(x=>x.lv!='ok').so
 $('sAl').innerHTML=al.length?`<div class="card" style="border-color:var(--wa)"><h3 style="color:var(--wa)">⚠ Replenishment alerts – ${esc(fn(f))} (${al.length})</h3><div class="wrap"><table><tr><th>Medicine</th><th>Available</th><th>Reorder level</th><th>Days left</th><th>Status</th><th>Suggested order</th></tr>${al.map(x=>`<tr><td>${esc(x.m.name)}</td><td><b>${x.av}</b> ${esc(x.m.unit)}</td><td>${x.m.re||'–'}</td><td>${x.days==null?'–':x.days}</td><td><span class="tag ${STT[x.lv][0]}">${STT[x.lv][1]}</span></td><td><b>${x.need}</b> ${esc(x.m.unit)}</td></tr>`).join('')}</table></div><p class="note">Suggested order restores stock to twice the reorder level, or 30 days of average use (from dispensing), whichever is higher. "Running low" = 14 days of stock or less at the current rate.</p><button class="b s" onclick="stkCsv()">Download replenishment list (CSV)</button></div>`:(a.length?'<div class="card"><span class="tag ok">✔ All stocked medicines are above their reorder level</span></div>':'');
 $('sT').innerHTML=`<table><tr><th>Medicine</th><th>Received / opening</th><th>Consumed</th><th>Available</th><th>Avg use / day</th><th>Days left</th><th>Consumed %</th><th>Status</th></tr>${a.map(s=>{const c=s.rec?Math.round(s.con/s.rec*100):0,t=STT[s.lv];return`<tr><td>${esc(s.m.name)}</td><td>${s.rec}</td><td>${s.con}</td><td><b>${s.av}</b> ${esc(s.m.unit)}</td><td>${s.d?s.d.toFixed(1):'–'}</td><td>${s.days==null?'–':s.days}</td><td><div class="bar"><i style="width:${Math.min(c,100)}%"></i></div>${c}%</td><td><span class="tag ${t[0]}">${t[1]}</span></td></tr>`}).join('')||'<tr><td class="note">No stock yet – upload the medicine list with quantities below, or record opening stock.</td></tr>'}</table>`}
 function stkCsv(){const f=$('sF').value,q=v=>'"'+String(v??'').replace(/"/g,'""')+'"',r=[['Facility','Medicine','Unit','Available','Reorder level','Avg use/day','Days left','Status','Suggested order'],...stkInfo(f).filter(x=>x.lv!='ok').map(x=>[fn(f),x.m.name,x.m.unit,x.av,x.m.re,x.d.toFixed(1),x.days??'',STT[x.lv][1],x.need])];dl(new Blob(['\uFEFF'+r.map(x=>x.map(q).join(',')).join('\r\n')],{type:'text/csv'}),'replenishment_'+today()+'.csv')}
-function addTx(){const by=me();if(!by)return;if(!allowed($('sF').value))return alert('You do not have access to this facility.');const q=+$('tQ').value;if(!q)return alert('Enter quantity');put('stk',{id:uid(),fid:$('sF').value,mid:$('tM').value,type:$('tT').value,qty:q,date:$('tD').value,by});$('tQ').value='';stkL()}
+function addTx(){const by=me();if(!by)return;if(!allowed($('sF').value))return alert('You do not have access to this facility.');if(!$('tM').value)return alert('Choose the medicine from the list.');const q=+$('tQ').value;if(!q)return alert('Enter quantity');put('stk',{id:uid(),fid:$('sF').value,mid:$('tM').value,type:$('tT').value,qty:q,date:$('tD').value,by});$('tQ').value='';$('tM').value='';$('tM').closest('.mcb').querySelector('.mcs').value='';stkL()}
 // diseases
 const PAL=['#0a7ea4','#f59e0b','#16a34a','#dc2626','#7c3aed','#0891b2','#ea580c','#64748b'];
 const addMo=(m,k)=>{let[y,mm]=m.split('-').map(Number);mm+=k;while(mm<1){mm+=12;y--}while(mm>12){mm-=12;y++}return y+'-'+String(mm).padStart(2,'0')};
@@ -704,7 +873,7 @@ $('aE').innerHTML=`<table><tr><th>Date</th><th>Facility</th><th>Type</th><th>Det
 function editRec(k,id){const o=S[k].find(x=>x.id==id);if(!o)return;let h=`<h3>Edit ${k=='opd'?'OPD record':k=='vis'?'prescription / visit':'stock transaction'}</h3><div class="row"><div><label>Facility</label><select id="eFf">${S.fac.map(f=>`<option value="${f.id}" ${f.id==o.fid?'selected':''}>${esc(f.name)}</option>`).join('')}</select></div><div><label>Date</label><input type="date" id="eDd" value="${o.date}"></div></div>`;
 if(k=='opd')h+=`<div class="g g4">${AG.map(a=>`<div><label>${a[1]}</label><input type="number" min="0" id="x_${a[0]}" value="${o.ag[a[0]]||0}"></div>`).join('')}<div><label>PWDs</label><input type="number" min="0" id="x_pwd" value="${o.pwd||0}"></div></div><label style="margin-top:8px">Notes</label><textarea id="x_note" rows="2">${esc(o.note||'')}</textarea>`;
 if(k=='vis')h+=`<div class="row"><div style="flex:2"><label>Patient name</label><input id="x_n" value="${esc(o.pt.name)}"></div><div><label>Age</label><input type="number" id="x_a" value="${o.pt.age}"></div><div><label>Sex</label><select id="x_s"><option value="M" ${o.pt.sex=='M'?'selected':''}>Male</option><option value="F" ${o.pt.sex=='F'?'selected':''}>Female</option></select></div></div><div class="row"><div><label>Diagnosis</label><select id="x_d">${[...new Set([...S.dis,o.dx])].map(d=>`<option ${d==o.dx?'selected':''}>${esc(d)}</option>`).join('')}</select></div><div><label>Clinician</label><select id="x_c">${[['','n/a (BHU)'],['M','Medical Officer'],['F','Women Medical Officer']].map(c=>`<option value="${c[0]}" ${c[0]==(o.cab||'')?'selected':''}>${c[1]}</option>`).join('')}</select></div></div>`;
-if(k=='stk')h+=`<div class="row"><div style="flex:2"><label>Medicine</label><select id="x_m">${medOpts()}</select></div><div><label>Type</label><select id="x_t">${['receive','issue','adjust'].map(t=>`<option ${t==o.type?'selected':''}>${t}</option>`).join('')}</select></div><div><label>Qty</label><input type="number" min="1" id="x_q" value="${o.qty}"></div></div>`;
+if(k=='stk')h+=`<div class="row"><div style="flex:2"><label>Medicine</label><select id="x_m">${medOpts(o.mid)}</select></div><div><label>Type</label><select id="x_t">${['receive','issue','adjust'].map(t=>`<option ${t==o.type?'selected':''}>${t}</option>`).join('')}</select></div><div><label>Qty</label><input type="number" min="1" id="x_q" value="${o.qty}"></div></div>`;
 h+=`<br><button class="b" onclick="saveEdit('${k}','${id}')">Save changes</button> <button class="b s" onclick="mclose()">Cancel</button>`;modal(h);if(k=='stk')$('x_m').value=o.mid}
 function saveEdit(k,id){const by=me();if(!by)return;const o=S[k].find(x=>x.id==id);o.fid=$('eFf').value;o.date=$('eDd').value;
 if(k=='opd'){AG.forEach(a=>o.ag[a[0]]=+$('x_'+a[0]).value||0);o.pwd=+$('x_pwd').value||0;o.note=$('x_note').value}
@@ -724,11 +893,14 @@ const by=d.by||{},rows=d.t=='Discharge'?[['Document','Rehabilitation discharge s
 b.innerHTML=`<h3 style="color:var(--ok)">✔ Valid Muslim Hands document</h3><table>${rows.map(x=>`<tr><th>${x[0]}</th><td>${esc(x[1])}</td></tr>`).join('')}</table><p class="note">Code ${esc(code)} · Verified ${new Date().toLocaleString('en-GB')}</p>`+cl}catch(e){b.innerHTML='<h3>Cannot verify right now</h3><p>Verification needs an internet connection to the live portal.</p>'+cl}}
 // settings
 V.set=()=>`<div class="card"><h3>Facilities</h3><table>${S.fac.map(f=>`<tr><td>${esc(f.name)}</td><td>${f.type}</td><td>${esc(f.loc)}</td><td><button class="b s" onclick="editF('${f.id}')">Edit</button></td></tr>`).join('')}</table><div class="row ao" style="margin-top:8px"><div style="flex:2"><label>Name</label><input id="nfN"></div><div><label>Type</label><select id="nfT"><option>BHU</option><option>RCPD</option><option>MHU</option></select></div><div><label>Location (groups facilities)</label><input id="nfL" placeholder="e.g. Muzaffarabad, AJK"></div><div><button class="b" onclick="addF()">Add</button></div></div></div>
-<div class="card ao"><h3>Medicines master list</h3><p class="note">${S.meds.length} items. Add one, or paste CSV lines: <code>name,unit,reorder_level,category</code></p><div class="row"><div style="flex:3"><textarea id="mL" rows="3" placeholder="Paracetamol 500mg,tab,500"></textarea></div><div><button class="b" onclick="addM()">Add medicines</button></div></div></div>
+<div class="card ao"><h3>Medicines master list</h3><div id="muS">${muSum()}</div><p class="note">One master file drives the pharmacy stock, the doctor's prescription list and consumption. Upload the updated Excel whenever medicines change: existing codes are updated, new medicines are added, blank cells keep the old value. Nothing is deleted – retire a medicine by setting <b>Status = Inactive</b>.</p>
+<div class="row"><div style="flex:2"><label>Master Excel / CSV file</label><input type="file" id="muF" accept=".xlsx,.csv,.txt" onchange="muLoad(this.files[0])"></div><div><button class="b s" onclick="muTpl()">Download current list (template)</button></div></div>
+<label style="display:flex;gap:6px;align-items:center;font-weight:400"><input type="checkbox" id="muX" style="width:auto" onchange="muPrev()"> Also mark medicines that are not in the uploaded file as Inactive</label><div id="muP"></div>
+<details style="margin-top:8px"><summary class="note" style="cursor:pointer">Quick add (paste lines)</summary><p class="note">CSV lines: <code>name,unit,reorder_level,category</code></p><div class="row"><div style="flex:3"><textarea id="mL" rows="3" placeholder="Paracetamol 500mg,tab,500"></textarea></div><div><button class="b" onclick="addM()">Add medicines</button></div></div></details></div>
 <div class="card"><h3>Cloud sync (Supabase)</h3><p class="note">${SB.on?'Records are saved on this device first and upload automatically when online. Signed in as '+esc(sess?sess.email:'-')+' | role: '+role+'.':'Supabase is not configured, so the portal runs in local-only mode. Paste the Project URL and anon key at the top of the script in index.html.'}</p><button class="b" onclick="sync().then(()=>go('set'))">Sync now</button> ${SB.on?'<button class="b s" onclick="logout()">Sign out</button>':''}<p class="note">Manual backup / merge (works without internet):</p><button class="b" onclick="dl(new Blob([JSON.stringify(S)],{type:'application/json'}),'mh_backup_'+today()+'.json')">Export JSON</button> <input type="file" id="imp" class="ao" accept=".json" style="width:auto" onchange="imp(this.files[0])"> <button class="b d ao" onclick="if(confirm('Erase ALL local data?')){localStorage.removeItem('mh2');location.reload()}">Reset</button></div>`;
 function editF(id){const f=S.fac.find(x=>x.id==id),n=prompt('Facility name',f.name);if(!n)return;const l=prompt('Location (used for grouping)',f.loc||'');f.name=n;f.loc=l||'';touch('fac',f);go('set')}
 function addF(){if(!$('nfN').value)return;put('fac',{id:uid(),name:$('nfN').value,type:$('nfT').value,loc:$('nfL').value});go('set')}
-function addM(){$('mL').value.split('\n').map(l=>l.split(',').map(x=>x.trim())).filter(x=>x[0]).forEach(x=>put('meds',{id:uid(),name:x[0],unit:x[1]||'unit',re:+x[2]||0,cat:x[3]||'Other'}));go('set')}
+function addM(){$('mL').value.split('\n').map(l=>l.split(',').map(x=>x.trim())).filter(x=>x[0]).forEach(x=>put('meds',{id:uid(),code:nextCode(),name:x[0],unit:x[1]||'unit',re:+x[2]||0,cat:x[3]||'Other'}));go('set')}
 function imp(f){const r=new FileReader();r.onload=()=>{const o=JSON.parse(r.result);for(const k of['fac','meds','opd','stk','vis','fin','ver','perm','msg']){const ids=new Set(S[k].map(x=>x.id));(o[k]||[]).forEach(x=>{if(!ids.has(x.id)){S[k].push(x);S.q.push(k+':'+x.id)}})}save();alert('Imported & merged.');go('set')};r.readAsText(f)}
 
 // ---- Supabase config (paste your values; leave blank for local-only mode)
@@ -753,10 +925,10 @@ let c=localStorage.mhc||'1970-01-01T00:00:00Z';
 for(;;){const r=await http('/rest/v1/records?select=id,kind,data,updated_at&updated_at=gt.'+encodeURIComponent(c)+'&order=updated_at.asc&limit=1000');
 r.forEach(x=>{if(!K.includes(x.kind)||S.q.includes(x.kind+':'+x.id))return;const a=S[x.kind],i=a.findIndex(y=>y.id==x.id);if(i<0)a.push(x.data);else a[i]=x.data;n++});
 if(r.length)c=r[r.length-1].updated_at;if(r.length<1000)break}
-localStorage.mhc=c;
+localStorage.mhc=c;masterFill();
 const pr=(await http('/rest/v1/profiles?select=emp_id,full_name,role,facilities&user_id=eq.'+sess.uid))[0];
 if(pr){const old=role+facs.join();role=pr.role;facs=pr.facilities||[];localStorage.mhr=role;localStorage.mhf=JSON.stringify(facs);if(role+facs.join()!=old)setTimeout(()=>{if(ST.lvl=='home')goHome()},0);}
-localStorage.mhls=new Date().toISOString();SERR='';save()}catch(e){console.warn('sync',e);SERR=String(e&&e.message||e).slice(0,200)}finally{busy=0;badge();if(sess&&role=='admin'&&!localStorage.mhseed){S.fac.forEach(o=>S.q.push('fac:'+o.id));S.meds.forEach(o=>S.q.push('meds:'+o.id));localStorage.mhseed=1;save();setTimeout(sync,50)}if(sess&&role=='admin'&&S.medq){S.meds.filter(m=>+m.id.slice(1)>67).forEach(o=>S.q.push('meds:'+o.id));S.medq=0;save();setTimeout(sync,50)}if(n&&ST.lvl!='home'&&ST.lvl!='cat'&&['dash','ph','stk','dz'].includes(cur))go(cur)}}
+localStorage.mhls=new Date().toISOString();SERR='';save()}catch(e){console.warn('sync',e);SERR=String(e&&e.message||e).slice(0,200)}finally{busy=0;badge();if(sess&&role=='admin'&&!localStorage.mhseed){S.fac.forEach(o=>S.q.push('fac:'+o.id));S.meds.forEach(o=>S.q.push('meds:'+o.id));localStorage.mhseed=1;save();setTimeout(sync,50)}if(sess&&role=='admin'&&S.medq){(S.mdq||[]).forEach(id=>{const t='meds:'+id;if(!S.q.includes(t))S.q.push(t)});S.mdq=[];S.medq=0;save();setTimeout(sync,50)}if(n&&ST.lvl!='home'&&ST.lvl!='cat'&&['dash','ph','stk','dz'].includes(cur))go(cur)}}
 function badge(){const b=$('sb'),on=navigator.onLine;if(!SB.on){b.textContent='Local mode';b.style.background='#6b7280';return}const ls=localStorage.mhls,t=ls?new Date(ls).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'',err=on&&SERR&&S.q.length;
 b.textContent=(err?'⚠ Server not reachable':on?'● Online':'○ Offline')+(S.q.length?' · '+S.q.length+' pending':(on&&t?' · saved to server '+t:' · synced'));b.style.background=err?'#b42318':on?(S.q.length?'#b45309':'#157f3d'):'#6b7280';b.style.cursor='pointer';b.title='Click for central server sync details';b.onclick=syncPanel}
 addEventListener('online',()=>{badge();sync()});document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync()});addEventListener('offline',badge);setInterval(sync,60000);
